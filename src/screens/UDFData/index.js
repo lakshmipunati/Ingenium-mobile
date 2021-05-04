@@ -5,7 +5,7 @@ export const UDFData=(props)=>{
     return(
         <View>
             <Text>
-                UDF Tab
+                Setup Tab
             </Text>
         </View>
     )

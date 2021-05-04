@@ -5,7 +5,7 @@ export const Description=(props)=>{
     return(
         <View>
             <Text>
-                Description Tab
+                Setup Tab
             </Text>
         </View>
     )

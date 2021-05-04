@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import { Button, StyleSheet, TextInput, View, Text } from "react-native";
+import { Button, StyleSheet, TextInput, View, Text, Image } from "react-native";
+// import {UserIcon} from "../../assets"
 import { BarCodeScanner } from "../bar-code-scanner";
 
 export function SharedTextInput(props){
@@ -29,15 +30,20 @@ export function SharedTextInput(props){
     )
 }
 
-export const TextInputWithIcon=(props)=>{
+export function TextInputWithIcon(props){
     return(  
-        <View>
-            <Text>{props.label}</Text>
+        <View>           
             <TextInput 
+                // keyboardType={props.keyboardType}
                 name={props.name}
                 placeholder={props.placeholder}
                 style={styles.inputBox}
-            />      
+                secureTextEntry={props.secureTextEntry}
+                // password={true}
+            />  
+             <View style={{position: 'absolute', left: 5,top: '15%'}}>
+                {props.icon}
+             </View>        
         </View> 
     )
 }
@@ -45,9 +51,10 @@ export const TextInputWithIcon=(props)=>{
 const styles = StyleSheet.create({
     inputBox:{
         borderWidth: 1,
-        width: '100%',
-        padding: 10,
-        borderRadius: 10
-        
-    }
+        padding: 15,
+        paddingLeft: 50,
+        borderRadius: 8,
+        borderColor: '#B5B3B2',
+        fontSize: 16
+    }, 
 })

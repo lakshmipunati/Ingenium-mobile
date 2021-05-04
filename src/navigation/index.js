@@ -22,7 +22,7 @@ import BottomTabNavigator from './BottomTabNavigator';
 function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* <Stack.Screen name="Login" component={Login} /> */}
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Root" component={BottomTabNavigator}/>
       {/* <Stack.Screen name="NotFound" component={NotFoundScZreen} options={{ title: 'Oops!' }} /> */}
     </Stack.Navigator>
