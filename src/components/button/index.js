@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function SharedButton(props){
     return(
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={()=>props.onPress()}>
             <Text style={styles.name}>{props.name}</Text>
         </TouchableOpacity>
     )
