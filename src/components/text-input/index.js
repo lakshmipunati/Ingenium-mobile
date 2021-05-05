@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View, Text, Image } from "react-native";
-// import {UserIcon} from "../../assets"
 import { BarCodeScanner } from "../bar-code-scanner";
 
 export function SharedTextInput(props) {
@@ -38,33 +37,41 @@ export function SharedTextInput(props) {
     )
 }
 
-export function TextInputWithIcon(props) {
-    return (
-        <View>
-            <TextInput
-                // keyboardType={props.keyboardType}
+export function TextInputWithIcon(props){
+    return(  
+        <View>           
+            <TextInput 
+                keyboardType={props.keyboardType}
                 name={props.name}
+                value={props.value}
                 placeholder={props.placeholder}
                 style={styles.inputBox}
                 secureTextEntry={props.secureTextEntry}
-            // password={true}
-            />
-            <View style={{ position: 'absolute', left: 5, top: '15%' }}>
-                {props.icon}
-            </View>
-        </View>
+                onChangeText={(value)=>props.onChangeText(props.name, value)}
+            />  
+             {props.leftIcon ? ( 
+                <View style={{position: 'absolute', left: 5,top: '15%'}}>
+                    {props.leftIcon}
+                </View>  
+             ) : null}
+             {props.rightIcon ? ( 
+                <View style={{position: 'absolute', right: 5,top: '15%'}}>
+                    {props.rightIcon}
+                </View>  
+             ) : null}
+                 
+        </View> 
     )
 }
 
 const styles = StyleSheet.create({
     inputBox: {
         borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 10,
-        padding: 20,
-        fontSize: 16,
-        height: 40,
-       // width: 240
-    },
-
+        padding: 12,
+        paddingLeft: 50,
+        paddingRight: 50,
+        borderRadius: 8,
+        borderColor: '#B5B3B2',
+        fontSize: 16
+    }, 
 })

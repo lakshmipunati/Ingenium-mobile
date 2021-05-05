@@ -1,13 +1,16 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { LogoutIcon } from '../assets';
+import { logoutUser } from '../redux';
 
 import { Setup, Data, UDFData, Description } from "../screens"
 
 const BottomTab = createBottomTabNavigator();
 
-export default function BottomTabNavigator() {
-
+export default function BottomTabNavigator(props) {
   const tabBarOptions = {
     style: {
       paddingBottom: 18,
@@ -55,7 +58,8 @@ function TabSetupNavigator() {
       <TabSetupStack.Screen
         name="TabOneScreen"
         component={Setup}
-        options={{ headerTitle: 'Setup Form' }}
+        options={HeaderContainer('Setup')}
+      //  options={{ headerTitle: 'Tab Setup Title' }}
       />
     </TabSetupStack.Navigator>
   );
@@ -69,7 +73,7 @@ function TabDataNavigator() {
       <TabDataStack.Screen
         name="TabTwoScreen"
         component={Data}
-        options={{ headerTitle: 'Data Form' }}
+        options={HeaderContainer('Data')}
       />
     </TabDataStack.Navigator>
   );
@@ -84,7 +88,7 @@ function TabDescriptionNavigator() {
       <TabDescritionStack.Screen
         name="TabDescriptionScreen"
         component={Description}
-        options={{ headerTitle: 'Description Catalog Form' }}
+        options={HeaderContainer('Description')}
       />
     </TabDescritionStack.Navigator>
   );
@@ -98,8 +102,29 @@ function TabUdfNavigator() {
       <TabUdfStack.Screen
         name="TabDescriptionScreen"
         component={UDFData}
-        options={{ headerTitle: 'UDF Form' }}
+        options={HeaderContainer('UDF')}
       />
     </TabUdfStack.Navigator>
   );
+}
+
+
+function HeaderContainer(headerTitle) {
+  const dispatch = useDispatch()
+  const _handleLogout = () => {
+    dispatch(logoutUser())
+  }
+  return (
+    {
+      headerTitle,
+      headerRightContainerStyle: {
+        paddingRight: 15,
+      },
+      headerRight: (props) => (
+        <TouchableOpacity onPress={() => _handleLogout()}>
+          <LogoutIcon height="40px" width="25px" fill="black" />
+        </TouchableOpacity>
+      ),
+    }
+  )
 }

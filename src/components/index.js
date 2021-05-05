@@ -1,3 +1,4 @@
 export * from "./bar-code-scanner";
 export * from "./text-input";
-export * from "./button"
+export * from "./button";
+export * from "./logo"
