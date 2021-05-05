@@ -1,53 +1,112 @@
-import React from 'react';
-import { StyleSheet, View, Dimensions, Text, Image, SafeAreaView, ScrollView } from 'react-native';
-import {ingeniumLogo, USerIcon, ContactIcon, LockIcon} from "../../assets";
-import { TextInputWithIcon, SharedButton } from '../../components';
+import React, {useState} from "react";
+import { 
+    StyleSheet, 
+    View, 
+    Dimensions, 
+    Text, 
+    Image, 
+    ScrollView, 
+    TouchableOpacity 
+} from 'react-native';
+import { useDispatch } from "react-redux";
+import {     
+    USerIcon, 
+    ContactIcon, 
+    LockIcon, 
+    HideIcon, 
+    VisibleIcon
+} from "../../assets";
+import { TextInputWithIcon, SharedButton, LogoWithVersion } from '../../components';
+import { loginUser } from "../../redux";
 
 const { height, width } = Dimensions.get('window');
+
 export function Login(props){
+
+    const init = {
+        companyID:'Alden',
+        userName: 'pradyot@nalashaa.com',
+        password: 'Testing1#',
+    };
+
+    const [state, setState ] = useState(init);
+    const [visiblePassword, setVisiblePassword] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const _handleChangeText=(name, value)=>{
+        setState((prev)=>({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const _hanldeOnClick=()=>{
+        dispatch(loginUser(state)).then(({payload})=>{
+            // console.log("===#222data===",payload)
+        })
+    }
+
     return(
         <View style={{position: 'relative'}}>
             <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={styles.scrollContainer}>        
                 <View style={styles.container} >
                     <View style={styles.componentContainer}>
-                        <View style={styles.logoContainer}>
+                        <LogoWithVersion />
+                        {/* <View style={styles.logoContainer}>
                             <Image
                                 style={styles.logo}
                                 source={ingeniumLogo}
                                 resizeMode="contain"
                             />            
                             <Text style={styles.versionText}>V2.2</Text>        
-                        </View>
+                        </View> */}
                         <View style={styles.formContainer}>
                             <View style={styles.inputContainer}>
                                 <TextInputWithIcon
-                                    name="user"
+                                    name="companyID"
                                     keyboardType="email-address"
-                                    placeholder="Enter user name"
-                                    icon={<ContactIcon height="40px" width="28px" fill="#B5B3B2" />}
-                                    maxLength="1"
+                                    value={state.companyID}
+                                    placeholder="Commpany ID"
+                                    onChangeText={(name, value)=>_handleChangeText(name, value)}
+                                    leftIcon={<ContactIcon height="40px" width="25px" fill="#B5B3B2" />}
                                 />
                             </View>
                             <View style={styles.inputContainer}>
                                 <TextInputWithIcon
-                                    name="user"
+                                    name="userName"
                                     keyboardType="email-address"
-                                    placeholder="Enter user name"
-                                    icon={<USerIcon height="40px" width="30px" fill="#B5B3B2" />}
-                                    maxLength="1"
+                                    value={state.userName}
+                                    placeholder="User ID"
+                                    onChangeText={(name, value)=>_handleChangeText(name, value)}
+                                    leftIcon={<USerIcon height="40px" width="25px" fill="#B5B3B2" />}
                                 />
                             </View>
                             <View style={styles.inputContainer}>
                                 <TextInputWithIcon
-                                    name="user"
-                                    placeholder="Enter user name"
-                                    icon={<LockIcon height="40px" width="30px" fill="#B5B3B2" />}
-                                    maxLength="1"
-                                    secureTextEntry={true}
+                                    name="password"
+                                    value={state.password}
+                                    placeholder="Password"
+                                    secureTextEntry={!visiblePassword}
+                                    onChangeText={(name, value)=>_handleChangeText(name, value)}
+                                    leftIcon={<LockIcon height="40px" width="25px" fill="#B5B3B2" />}
+                                    rightIcon={ 
+                                        visiblePassword 
+                                        ?(                                         
+                                            <TouchableOpacity onPress={()=>setVisiblePassword(!visiblePassword)}>
+                                                <HideIcon height="40px" width="25px" fill="#B5B3B2" />
+                                            </TouchableOpacity>
+                                        )
+                                        : (                                      
+                                            <TouchableOpacity onPress={()=>setVisiblePassword(!visiblePassword)}>
+                                                <VisibleIcon height="40px" width="25px" fill="#B5B3B2" />
+                                            </TouchableOpacity>
+                                        )
+                                    }
                                 />
                             </View>
                             <View style={styles.inputContainer}>
-                                <SharedButton name="LOG IN"/>
+                                <SharedButton name="LOG IN" onPress={()=>_hanldeOnClick()}/>
                             </View>
                         </View>
                     </View>    
@@ -74,20 +133,6 @@ const styles = StyleSheet.create({
     },
     inputContainer:{
         marginTop: 20
-    },
-    logo: {
-        width: width - 150
-    },
-    logoContainer: {
-        alignItems: 'center', 
-        position: 'relative'
-    },
-    versionText: {
-        position: 'absolute',
-        right: 30,
-        bottom: 50, 
-        color: 'red', 
-        fontWeight: 'bold'
     },
     footerText: {
         textAlign: 'center'
