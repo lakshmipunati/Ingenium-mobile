@@ -1,81 +1,121 @@
-import React from 'react';
-import { Dimensions, View, StyleSheet, ScrollView, Text, TouchableOpacity, Image, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity, Alert } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { BarCodeScanner } from '../../components/bar-code-scanner';
 import { SharedTextInput } from '../../components/text-input';
-import { lookup, barcodeCamera, anchorIcon } from "../../assets/images";
-import { SharedButton } from '../../components/button';
+import { lookupByAssetNumberAction } from '../../redux';
 
-const { height, width } = Dimensions.get('window');
 export const Data = (props) => {
+    const init = {
+        assetNumber: '',
+        location: '',
+        descriptionID: ''
+    }
+    const [state, setState]=useState(init);
+    const [scanned, setScanned] = useState({activeTab: '', status: false});
+    const reducerData = useSelector((state)=>state.dataTab);
+    const {location, descriptionID, errorMsg} = reducerData.entity;
+    const dispatch = useDispatch();
+
+    if(reducerData.errorMsg){
+        Alert.alert(reducerData.errorMsg)
+    }
+  
+    const onChangeText=(name, value)=>{
+        setState((prev)=>({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const onClickScanner=(activeTab)=>{
+        setScanned((prev)=>({
+            ...prev,
+            status: true,
+            activeTab
+        }))
+    }
+
+    const handleAferScann=(status, data, activeTab)=>{
+        setState((prev)=>({
+            ...prev,
+            [activeTab]: data
+        }));
+        setScanned({status, activeTab: ''})
+    }
+
+    const onClickLookup=(name)=>{
+        if(state[name] && (state[name]).trim()!==""){
+            dispatch(lookupByAssetNumberAction(state[name]))
+        }
+    }
+
     return (
-        <View style={styles.container}>
-            <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={styles.scrollContainer}>
-                <View>
-                    <View>
-                        <Text style={styles.textClr}>Asset Number</Text>
-                        <View style={styles.componentContainer}>
-                            <SharedTextInput
-                                placeholder="Asset Number" />
-                            <TouchableOpacity style={styles.button} >
-                                <Image style={styles.iconStyle} source={lookup} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} >
-                                <Image style={styles.iconStyle} source={barcodeCamera} />
-                            </TouchableOpacity>
+        <View style={{flex: 1}}>
+            {
+                scanned.status && scanned.activeTab.trim() !== ""
+                ? 
+                <BarCodeScanner setScanned={(status, data, activeTab) => handleAferScann(status, data, activeTab)} activeTab={scanned.activeTab} /> 
+                :
+                <View style={styles.container}>
+                    <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={styles.scrollContainer}>
+                        <View>
+                            <View style={styles.inputContainer}>
+                                <SharedTextInput
+                                    label="Asset Number"
+                                    name="assetNumber"
+                                    placeholder="Asset Number" 
+                                    value={state.assetNumber}
+                                    style={{minWidth: 262}}
+                                    onClickScanner={(activeTab)=>onClickScanner(activeTab)}
+                                    onClickLookup={(name)=>onClickLookup(name)}
+                                    onChangeText={(name, value)=>onChangeText(name, value)}
+                                    isLookup
+                                    isScanner
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <SharedTextInput
+                                    label="Description ID"
+                                    name="descriptionID"
+                                    placeholder="Description ID" 
+                                    value={descriptionID && descriptionID !=="" ? descriptionID.toString() : state.descriptionID}
+                                    onChangeText={(name, value)=>onChangeText(name, value)}
+                                    onClickLookup
+                                    style={{minWidth: 262}}
+                                    isLookup
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <SharedTextInput
+                                    label="Location"
+                                    name="location"
+                                    placeholder="Location" 
+                                    style={{minWidth: 221}}
+                                    value={ location && location!== "" ? location : state.location}
+                                    onClickScanner={(activeTab)=>onClickScanner(activeTab)}
+                                    onChangeText={(name, value)=>onChangeText(name, value)}
+                                    isDefault
+                                    isScanner
+                                    isSearch
+                                />
+                            </View>               
+                            <View style={[styles.inputContainer,styles.btnContainer]}>
+                                <View style={styles.leftContainer}>
+                                    <TouchableOpacity style={styles.btn}>
+                                        <Text style={styles.name}>Save</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.rightContainer}>
+                                    <TouchableOpacity style={styles.btn}>
+                                        <Text style={styles.name}>Cancel</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-
-                    <View>
-                        <Text style={styles.textClr}>Location</Text>
-                        <View style={styles.componentContainer}>
-                            <SharedTextInput
-                                placeholder="Location" />
-                            <TouchableOpacity style={styles.button} >
-                                <Image style={styles.iconStyle} source={lookup} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} >
-                                <Image style={styles.iconStyle} source={barcodeCamera} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} >
-                                <Image style={styles.iconStyle} source={anchorIcon} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <View>
-                        <Text style={styles.textClr}>Condition code</Text>
-                        <View style={styles.componentContainer}>
-                            <SharedTextInput
-                                placeholder="Condition code" />
-                            <TouchableOpacity style={styles.button} >
-                                <Image style={styles.iconStyle} source={anchorIcon} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <View>
-                        <Text style={styles.textClr}>Unit Cost</Text>
-                        <View style={styles.componentContainer}>
-                            <SharedTextInput
-                                placeholder="Unit cost" />
-                        </View>
-                    </View>
-
-                    <View>
-                        <Text style={styles.textClr}>Product Category</Text>
-                        <SharedTextInput
-                            placeholder="Product Category" />
-                    </View>
+                    </ScrollView>  
                 </View>
-            </ScrollView>
-
-            <View style={styles.inputContainer}>
-                <TouchableOpacity style={styles.btn}>
-                    <Text style={styles.name}>Save</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}>
-                    <Text style={styles.name}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
+            }
         </View>
     )
 }
@@ -86,8 +126,18 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: "#ccc",
-        width: 180,
-        marginRight: 10
+        width: '100%',
+    },
+    rightContainer:{
+        flex: 1,
+        paddingLeft: 5
+    },
+    leftContainer: {
+        flex: 1,
+        paddingRight: 5
+    },
+    btnContainer:{
+        flexDirection: 'row'
     },
     name: {
         textAlign: 'center',
@@ -99,32 +149,7 @@ const styles = StyleSheet.create({
         padding: 18,
         backgroundColor: "white",
     },
-    textClr: {
-        color: '#A9A9A9',
-        fontSize: 16,
-    },
-    button: {
-        justifyContent: "center",
-        alignItems: "center",
-        paddingLeft: 6
-    },
-    iconStyle: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        width: 40,
-        height: 40,
-        borderRadius: 10,
-    },
-    componentContainer: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingBottom: 10
-    },
     inputContainer: {
-        marginTop: 20,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: 150
+        marginTop: 10,
     },
 })

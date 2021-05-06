@@ -1,38 +1,51 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View, Text, Image } from "react-native";
+import { Button, StyleSheet, TextInput, View, Text, Image, TouchableOpacity } from "react-native";
 import { BarCodeScanner } from "../bar-code-scanner";
+import { lookup, barcodeCamera, anchorIcon, searchLocation } from "../../assets/images";
 
 export function SharedTextInput(props) {
     const [scannerActive, setScannerActive] = useState(true);
 
     return (
         <View style={{ flex: 1 }}>
-
-            {/* <TextInput style={styles.inputBox}
-                name={props.name}
-                placeholder={props.placeholder}
-                // value={props.value}
-                underlineColorAndroid="rgba(0,0,0,0)"
-            /> */}
-
             {/* {scannerActive ? <BarCodeScanner setScanned={(status) => setScannerActive(status)} scanned={scannerActive} /> : */}
-            <View>
-                <TextInput style={styles.inputBox}
-                    name={props.name}
-                    placeholder={props.placeholder}
-                // style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                // onChangeText={text => onChangeText(text)}
-                // value={value}
-                />
-                {/* <Button
-                    onPress={() => setScannerActive(true)}
-                    title="Scan"
-                    color="#841584"
-                    accessibilityLabel="Learn more about this purple button"
-                /> */}
-            </View>
-            {/* } */}
+            <View style={styles.container}>
+                <View>
+                    <Text style={styles.label}>{props.label}</Text>
+                    <View style={styles.componentContainer}>
+                        <TextInput style={[styles.sharedInputBox,props.style]}
+                            name={props.name}
+                            placeholder={props.placeholder}
+                            value={props.value}
+                            onChangeText={(value)=>props.onChangeText(props.name, value)}
+                            // value={props.value}
+                            underlineColorAndroid="rgba(0,0,0,0)"
+                       /> 
+                        {props.isSearch ? 
+                            <TouchableOpacity style={styles.button} >
+                                <Image style={styles.iconStyle} source={searchLocation} />
+                            </TouchableOpacity>
+                        : null }
+                        {props.isLookup ? <TouchableOpacity style={styles.button} onPress={()=>props.onClickLookup(props.name)}>
+                                <Image style={styles.iconStyle} source={lookup} />
+                            </TouchableOpacity> 
+                        : null }
+                           
+                        {props.isScanner ? 
+                            <TouchableOpacity style={styles.button} onPress={()=>props.onClickScanner(props.name)}>
+                                <Image style={styles.iconStyle} source={barcodeCamera} />
+                            </TouchableOpacity>
+                        : null }
 
+                        {props.isDefault ? 
+                            <TouchableOpacity style={styles.button} >
+                                <Image style={styles.iconStyle} source={anchorIcon} />
+                            </TouchableOpacity>
+                        : null }
+                         
+                        </View>
+                    </View>
+            </View>
         </View>
     )
 }
@@ -74,4 +87,47 @@ const styles = StyleSheet.create({
         borderColor: '#B5B3B2',
         fontSize: 16
     }, 
+    sharedInputBox: {
+        borderWidth: 1,
+        padding: 12,
+        borderRadius: 8,
+        borderColor: '#B5B3B2',
+        fontSize: 16,
+    },
+    container:{
+        flexDirection: 'row'
+    },
+    componentContainer: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingBottom: 10
+    },
+    rightContainer: {
+        flex: 0.5,
+        justifyContent: 'center',
+        marginTop: 15,
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+        padding: 0,
+        margin: 0
+    },
+    label: {
+        color: '#A9A9A9',
+        fontSize: 16,
+    },
+    button: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: 6
+    },
+    iconStyle: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        width: 41,
+        height: 50,
+        marginTop: 0,
+        borderRadius: 10,
+        marginLeft: -5
+    },
 })
