@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { ModelSelector } from '../../components';
 import { crossIcon } from '../../assets/images';
 
@@ -13,6 +14,10 @@ export const Setup = (props) => {
     { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
   ];
   let listitems = data;
+
+  const reducerData = useSelector((state) => state.lookupData);
+  debugger
+  const { UDFLookupList } = reducerData.entity;
 
   const deleteUDF = (index) => {
     listitems = listitems.splice(0, index);

@@ -4,17 +4,18 @@ import {
     GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
 } from '../../config';
 
-export const getUDFListAndConditionCodeByDataCategory = (dataCategory) => {
+export const getUDFListAndConditionCodeByDataCategory = () => {
+    //debugger
     return axios({
         method: "GET",
         url: GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
         baseURL: API_BASE_PATH,
         params: {
-            dataCategoryName: dataCategory,
+            dataCategoryName: 'EQUIPMENT',
         },
     })
         .then((response) => {
-            debugger
+             debugger
             let { data } = response;
             data.UDFList = data.UDFList.filter(function (e) {
                 return e.FieldType != "FILE LINK";

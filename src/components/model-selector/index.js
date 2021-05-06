@@ -12,7 +12,7 @@ export function ModelSelector(props) {
                     selectStyle={{ height: 45 }}
                     data={props.listItems}
                     accessible={true}
-                    initValue={(props.listItems[0].label)}
+                    initValue={(props.listItems.length!=0 && props.listItems[0].label)}
                 // onChange={(option) => { this.onSelectionChange(option.key) }} 
                 />
             </View>
