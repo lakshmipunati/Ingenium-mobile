@@ -16,9 +16,10 @@ export const Setup = (props) => {
   let listitems = data;
 
   const reducerData = useSelector((state) => state.lookupData);
-  debugger
-  const { UDFLookupList } = reducerData.entity;
 
+
+  const { UDFLookupList } = reducerData.entity;
+  console.log("===#2===",UDFLookupList)
   const deleteUDF = (index) => {
     listitems = listitems.splice(0, index);
   }
@@ -41,7 +42,7 @@ export const Setup = (props) => {
             {listitems &&
               listitems.map((field, index) => {
                 return (
-                  <View style={{
+                  <View key={index} style={{
                     paddingVertical: 2,
                     paddingHorizontal: 10,
                     flexDirection: "row",

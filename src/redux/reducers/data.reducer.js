@@ -56,13 +56,12 @@ export const lookupData = createSlice({
             state.errorMsg = undefined;
         },
         [getUDFDataAction.fulfilled]: (state, { payload }) => {
-            debugger
-           // if (payload.userDefinedFields) {
+           if (payload.userDefinedFields) {
                 state.errorMsg = undefined
-                state.lookupEntity.UDFLookupList = payload.userDefinedFields
-            // } else {
-            //     state.lookupEntity.UDFLookupList = [];
-            // }
+                state.entity.UDFLookupList = payload.userDefinedFields
+            } else {
+                state.entity.UDFLookupList = [];
+            }
         },
         // [getUDFDataAction.fulfilled]: (state, { payload }) => {
         //     //debugger

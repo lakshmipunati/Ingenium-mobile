@@ -3,8 +3,9 @@ import {
     API_BASE_PATH,
     GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
 } from '../../config';
+import { headers } from "./token.service";
 
-export const getUDFListAndConditionCodeByDataCategory = () => {
+export const getUDFListAndConditionCodeByDataCategory = async() => {
     //debugger
     return axios({
         method: "GET",
@@ -13,6 +14,7 @@ export const getUDFListAndConditionCodeByDataCategory = () => {
         params: {
             dataCategoryName: 'EQUIPMENT',
         },
+        headers: await headers()
     })
         .then((response) => {
              debugger
@@ -23,9 +25,7 @@ export const getUDFListAndConditionCodeByDataCategory = () => {
             let transformedData = transformUDFListAndConditionCode(data);
             return transformedData;
         })
-        .catch((e) => {
-            return e;
-        });
+        .catch(({response}) =>response);
 };
 
 const transformUDFListAndConditionCode = (data) => {
