@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_PATH, ASSETNUMBER_LOOKUP } from "../../config";
+import { API_BASE_PATH, ASSETNUMBER_LOOKUP, SEARCH_LOCATION } from "../../config";
 import {headers} from "./token.service"
 
 
@@ -42,4 +42,28 @@ const transformAssetNumberLookupResponse = (response) => {
         descriptionCatalogData,
         UDFList
     };
+}
+
+export const searchLocationAPI=async(text)=>{
+    return axios({
+        method: 'GET',
+        url: SEARCH_LOCATION,
+        baseURL: API_BASE_PATH,
+        params: {
+            text
+        },
+        headers: await headers()
+    }).then((response) => {
+        let { data } = response;
+        return transformLocationList(data);
+    }).catch(({response})=>console.log("==#res Error: ===",response))
+}
+
+const transformLocationList = (data) => {
+    let locations = data.map((item) => (
+        {
+            key: item.Name
+        }
+    ));
+    return { searchResultList: locations };
 }

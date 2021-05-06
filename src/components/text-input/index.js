@@ -22,7 +22,7 @@ export function SharedTextInput(props) {
                             underlineColorAndroid="rgba(0,0,0,0)"
                        /> 
                         {props.isSearch ? 
-                            <TouchableOpacity style={styles.button} >
+                            <TouchableOpacity style={styles.button} onPress={()=>props.onClickSearch(props.name)}>
                                 <Image style={styles.iconStyle} source={searchLocation} />
                             </TouchableOpacity>
                         : null }

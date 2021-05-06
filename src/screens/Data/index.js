@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity, Alert, Image, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { ModelSelector } from '../../components';
 import { BarCodeScanner } from '../../components/bar-code-scanner';
 import { SharedTextInput } from '../../components/text-input';
 import { lookupByAssetNumberAction } from '../../redux';
+import { anchorIcon } from "../../assets/images";
+
+const {width, height} = Dimensions.get('screen');
 
 export const Data = (props) => {
     const init = {
@@ -16,6 +20,13 @@ export const Data = (props) => {
     const reducerData = useSelector((state)=>state.dataTab);
     const {location, descriptionID, errorMsg} = reducerData.entity;
     const dispatch = useDispatch();
+
+    const data = [
+        { key: 1, section: true, label: 'Fruits' },
+        { key: 2, label: 'Red Apples' },
+      ];
+      let listitems = data;
+
 
     if(reducerData.errorMsg){
         Alert.alert(reducerData.errorMsg)
@@ -50,6 +61,14 @@ export const Data = (props) => {
         }
     }
 
+    const handleOnclickSearch=(title)=>{
+        props.navigation.navigate({
+            name: 'SearchItems',
+            title,
+            params: {title}
+        })
+    }
+
     return (
         <View style={{flex: 1}}>
             {
@@ -64,7 +83,7 @@ export const Data = (props) => {
                                 <SharedTextInput
                                     label="Asset Number"
                                     name="assetNumber"
-                                    placeholder="Asset Number" 
+                                    placeholder="" 
                                     value={state.assetNumber}
                                     style={{minWidth: 262}}
                                     onClickScanner={(activeTab)=>onClickScanner(activeTab)}
@@ -78,7 +97,7 @@ export const Data = (props) => {
                                 <SharedTextInput
                                     label="Description ID"
                                     name="descriptionID"
-                                    placeholder="Description ID" 
+                                    placeholder="" 
                                     value={descriptionID && descriptionID !=="" ? descriptionID.toString() : state.descriptionID}
                                     onChangeText={(name, value)=>onChangeText(name, value)}
                                     onClickLookup
@@ -90,16 +109,33 @@ export const Data = (props) => {
                                 <SharedTextInput
                                     label="Location"
                                     name="location"
-                                    placeholder="Location" 
+                                    placeholder="" 
                                     style={{minWidth: 221}}
                                     value={ location && location!== "" ? location : state.location}
                                     onClickScanner={(activeTab)=>onClickScanner(activeTab)}
                                     onChangeText={(name, value)=>onChangeText(name, value)}
+                                    onClickSearch={(title)=>handleOnclickSearch(title)}
                                     isDefault
                                     isScanner
                                     isSearch
                                 />
-                            </View>               
+                            </View>         
+
+                            <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Condition Code</Text>
+                                <View style={{flexDirection: 'row'}}>
+                                    <ModelSelector
+                                        style={styles.pickerStyle}
+                                        selectStyle={{ height: 40, width: 150 }}
+                                        listItems={listitems}
+                                        initValue="Fruits"
+                                    />   
+                                    <TouchableOpacity style={styles.button} >
+                                        <Image style={styles.iconStyle} source={anchorIcon} />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                                  
                             <View style={[styles.inputContainer,styles.btnContainer]}>
                                 <View style={styles.leftContainer}>
                                     <TouchableOpacity style={styles.btn}>
@@ -151,5 +187,23 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginTop: 10,
+    },
+    button: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: 6
+    },
+    label: {
+        color: '#A9A9A9',
+        fontSize: 16,
+    },
+    iconStyle: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        width: 41,
+        height: 50,
+        marginTop: 0,
+        borderRadius: 10,
+        marginLeft: -5
     },
 })
