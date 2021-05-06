@@ -13,8 +13,7 @@ export function BarCodeScanner(props) {
     }, []);
   
     const handleBarCodeScanned = ({ type, data }) => {
-      alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-      props.setScanned(false)
+      props.setScanned(false, data, props.activeTab)
     };
   
     if (hasPermission === null) {

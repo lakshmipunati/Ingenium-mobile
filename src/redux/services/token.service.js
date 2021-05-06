@@ -44,3 +44,12 @@ export const removeAccessTokenFromStorage = () => {
     AsyncStorage.removeItem(COMPANY_CODE_KEY);
     return undefined
 }
+
+export const headers=async()=>{
+    const data = await retrieveTokenFromStorage();
+    return {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${data[0][1]}`,
+        CompanyCode: data[1][1]
+    }
+}
