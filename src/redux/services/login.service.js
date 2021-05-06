@@ -1,10 +1,7 @@
 import axios from "axios";
 import qs from 'qs';
-import { AsyncStorage } from "react-native";
 import {
-    ACCESS_TOKEN_KEY,
     API_BASE_PATH,
-    COMPANY_CODE_KEY,
     LOGIN_API,
 } from '../../config';
 
@@ -30,6 +27,6 @@ export const loginAPI = ({companyID, userName, password}) => {
             saveTokenToStorage({ token: data['access_token'],companyCode:companyID });
             setAxiosGlobalConfig({ token: data['access_token'],companyCode:companyID });
             return data;
-        }).catch(({response})=>console.log("#Error : ",response.data))
+        }).catch(({response})=>response)
 
 }
