@@ -9,3 +9,4 @@ export const API_BASE_PATH = 'https://ingenium-mobileapi.azurewebsites.net';
 
 export * from './Login';
 export * from './Data';
+export * from './Setup';
