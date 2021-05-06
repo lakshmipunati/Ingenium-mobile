@@ -13,3 +13,5 @@ export const lookup = require('./MobileForm/lookup.png');
 export const searchLocation = require('./MobileForm/search_location.png');
 
 export const anchorIcon = require('./MobileForm/anchor.png');
+
+export const crossIcon = require('./MobileForm/cross.png');
