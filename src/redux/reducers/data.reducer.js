@@ -15,6 +15,9 @@ const entity = {
     location: '',
     selectedConditionCode: "O",
     UDFList: [],
+    defaultValues: {
+        location: false
+    }
 }
 
 const lookupEntity = {
