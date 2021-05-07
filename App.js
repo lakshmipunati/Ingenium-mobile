@@ -4,10 +4,10 @@ import { StyleSheet} from 'react-native';
 import {Provider} from "react-redux"
 import {Navigation} from "./src/navigation"
 import { store, retrieveTokenFromStorage } from './src/redux';
-export default function App() {
+export default function App(props) {
   return (
     <Provider store={store}>
-      <Navigation />
+      <Navigation {...props}/>
       </Provider>
   );
 }

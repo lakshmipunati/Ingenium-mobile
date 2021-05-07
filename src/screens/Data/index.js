@@ -1,38 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity, Alert, Image, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { ModelSelector } from '../../components';
 import { BarCodeScanner } from '../../components/bar-code-scanner';
 import { SharedTextInput } from '../../components/text-input';
-import { lookupByAssetNumberAction, getUDFDataAction } from '../../redux';
+import { clearDataFields, defaltValueSetup, lookupByAssetNumberAction, selectedTypeUpdate, getUDFDataAction } from '../../redux';
+import { anchorIcon } from "../../assets/images";
+
+const { width, height } = Dimensions.get('screen');
 
 export const Data = (props) => {
-    const init = {
-        assetNumber: '',
-        location: '',
-        descriptionID: '',
-        udfList: [],
 
-    }
-    const [state, setState] = useState(init);
     const [scanned, setScanned] = useState({ activeTab: '', status: false });
     const reducerData = useSelector((state) => state.dataTab);
-    const { location, descriptionID, errorMsg } = reducerData.entity;
+    const { location, descriptionID, errorMsg, assetNumber, defaultValues } = reducerData.entity;
 
     const dispatch = useDispatch();
+    const data = [
+        { key: 1, section: true, label: 'Fruits' },
+        { key: 2, label: 'Red Apples' },
+    ];
+    let listitems = data;
 
     useEffect(() => {
         dispatch(getUDFDataAction());
     });
-
-    if (reducerData.errorMsg) {
-        Alert.alert(reducerData.errorMsg)
-    }
-
     const onChangeText = (name, value) => {
-        setState((prev) => ({
-            ...prev,
-            [name]: value
-        }))
+        dispatch(selectedTypeUpdate({ title: value, type: name }))
     }
 
     const onClickScanner = (activeTab) => {
@@ -44,17 +38,31 @@ export const Data = (props) => {
     }
 
     const handleAferScann = (status, data, activeTab) => {
-        setState((prev) => ({
-            ...prev,
-            [activeTab]: data
-        }));
+        dispatch(selectedTypeUpdate({ title: data, type: activeTab }))
         setScanned({ status, activeTab: '' })
     }
 
-    const onClickLookup = (name) => {
-        if (state[name] && (state[name]).trim() !== "") {
-            dispatch(lookupByAssetNumberAction(state[name]))
+    const onClickLookup = (name, number) => {
+
+        if (number && number.trim() !== "") {
+            dispatch(lookupByAssetNumberAction(number))
         }
+    }
+
+    const handleOnclickSearch = (title) => {
+        props.navigation.navigate({
+            name: 'SearchItems',
+            title,
+            params: { title }
+        })
+    }
+
+    const onClickDefault = (name) => {
+        if (name) {
+            console.log("===#nam=====", name)
+            dispatch(defaltValueSetup({ status: !defaultValues[name], name }));
+        }
+
     }
 
     return (
@@ -71,11 +79,11 @@ export const Data = (props) => {
                                     <SharedTextInput
                                         label="Asset Number"
                                         name="assetNumber"
-                                        placeholder="Asset Number"
-                                        value={state.assetNumber}
-                                        style={{ minWidth: 262 }}
+                                        placeholder=""
+                                        value={assetNumber}
+                                        style={{ minWidth: width - 118 }}
                                         onClickScanner={(activeTab) => onClickScanner(activeTab)}
-                                        onClickLookup={(name) => onClickLookup(name)}
+                                        onClickLookup={(name) => onClickLookup(name, assetNumber)}
                                         onChangeText={(name, value) => onChangeText(name, value)}
                                         isLookup
                                         isScanner
@@ -85,11 +93,11 @@ export const Data = (props) => {
                                     <SharedTextInput
                                         label="Description ID"
                                         name="descriptionID"
-                                        placeholder="Description ID"
-                                        value={descriptionID && descriptionID !== "" ? descriptionID.toString() : state.descriptionID}
+                                        placeholder=""
+                                        value={descriptionID.toString()}
                                         onChangeText={(name, value) => onChangeText(name, value)}
                                         onClickLookup
-                                        style={{ minWidth: 262 }}
+                                        style={{ minWidth: width - 118 }}
                                         isLookup
                                     />
                                 </View>
@@ -97,16 +105,39 @@ export const Data = (props) => {
                                     <SharedTextInput
                                         label="Location"
                                         name="location"
-                                        placeholder="Location"
-                                        style={{ minWidth: 221 }}
-                                        value={location && location !== "" ? location : state.location}
+                                        placeholder=""
+                                        style={{
+                                            minWidth: width - 159,
+                                            borderColor: defaultValues.location ? 'red' : '#B5B3B2',
+                                            color: defaultValues.location ? 'red' : 'black',
+                                            borderWidth: defaultValues.location ? 2 : 1,
+                                        }}
+                                        value={location}
                                         onClickScanner={(activeTab) => onClickScanner(activeTab)}
                                         onChangeText={(name, value) => onChangeText(name, value)}
+                                        onClickSearch={(title) => handleOnclickSearch(title)}
+                                        onClickDefault={(name) => onClickDefault(name)}
                                         isDefault
                                         isScanner
                                         isSearch
                                     />
                                 </View>
+
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.label}>Condition Code</Text>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <ModelSelector
+                                            style={styles.pickerStyle}
+                                            selectStyle={{ height: 40, width: 150 }}
+                                            listItems={listitems}
+                                            initValue="Fruits"
+                                        />
+                                        <TouchableOpacity style={styles.button} >
+                                            <Image style={styles.iconStyle} source={anchorIcon} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+
                                 <View style={[styles.inputContainer, styles.btnContainer]}>
                                     <View style={styles.leftContainer}>
                                         <TouchableOpacity style={styles.btn}>
@@ -114,8 +145,8 @@ export const Data = (props) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.rightContainer}>
-                                        <TouchableOpacity style={styles.btn}>
-                                            <Text style={styles.name}>Cancel</Text>
+                                        <TouchableOpacity style={styles.btn} onPress={() => dispatch(clearDataFields())}>
+                                            <Text style={styles.name}>Clear</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -158,5 +189,23 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginTop: 10,
+    },
+    button: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: 6
+    },
+    label: {
+        color: '#A9A9A9',
+        fontSize: 16,
+    },
+    iconStyle: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        width: 41,
+        height: 50,
+        marginTop: 0,
+        borderRadius: 10,
+        marginLeft: -5
     },
 })

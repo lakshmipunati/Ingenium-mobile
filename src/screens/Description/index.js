@@ -1,18 +1,23 @@
 import React from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 import { LabelValue } from '../../components/label-value';
 
 export const Description = (props) => {
+    const reducerData = useSelector((state)=>state.dataTab);
+
+    const {description, manufacturer, productImageURI, productNumber, userCode} = reducerData.entity.descriptionCatalogData;
+    const {descriptionID}=reducerData.entity;
     return (
         <View style={styles.container}>
             <KeyboardAvoidingView>
                 <ScrollView>
-                    <LabelValue label={"Description ID"} value={'1'} />
-                    <LabelValue label={"Product Category"} value={'DELL '} />
-                    <LabelValue label={"Description"} value={'DIMENSION, MODEL 6100 ETC.'} />
-                    <LabelValue label={"Manufacturer"} value={'DELL'} />
-                    <LabelValue label={"Product Number"} value={'PG-123'} />
-                    <LabelValue label={"User Code"} value={'123'} />
+                    <LabelValue label={"Description ID"} value={descriptionID ? descriptionID: null} />
+                    <LabelValue label={"Product Category"} value={manufacturer ? manufacturer : null} />
+                    <LabelValue label={"Description"} value={description ? description : null} />
+                    <LabelValue label={"Manufacturer"} value={manufacturer ? manufacturer : null} />
+                    <LabelValue label={"Product Number"} value={productNumber ? productNumber : null} />
+                    <LabelValue label={"User Code"} value={userCode ? userCode : null} />
                     <Text style={styles.product_label}>Product Image :</Text>
                     {/* <ProductImage
                         imageStyle={styles.productImage}
