@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, ScrollView } from 'rea
 import { useDispatch, useSelector } from 'react-redux';
 import { ModelSelector } from '../../components';
 import { crossIcon } from '../../assets/images';
-import { udfSelectedAction, removeSelectedUDFAction } from '../../redux';
+import { udfSelectedAction, removeSelectedUDFAction, clearAllUDFSelected } from '../../redux';
 
 export const Setup = (props) => {
 
@@ -25,26 +25,34 @@ export const Setup = (props) => {
     udfSelected = selectedId;
   }
 
+  const clearAllUDFs = () => {
+    dispatch(clearAllUDFSelected());
+  }
+
   const saveUDF = () => {
+    // debugger
     if (selectedUDFs.length > 0 && !selectedUDFs.find((item) => item.key == udfSelected.key)) {
       dispatch(udfSelectedAction(udfSelected))
+    } else if (selectedUDFs.length == 0 && udfSelected == "") {
+      udfSelected = UDFLookupListItems[0]
+      dispatch(udfSelectedAction(udfSelected));
     } else if (selectedUDFs.length == 0) {
       dispatch(udfSelectedAction(udfSelected));
     }
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView>
-        <View style={styles.container}>
+        <View >
           <Text style={styles.textClr}>User Defined Field</Text>
           <ModelSelector listItems={UDFLookupListItems} onChange={changeUDF} />
           <View style={styles.inputContainer}>
             <TouchableOpacity style={styles.btn} onPress={() => saveUDF()} >
               <Text style={styles.name}>Save</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.name}>Cancel</Text>
+            <TouchableOpacity style={styles.btn} onPress={() => clearAllUDFs()} >
+              <Text style={styles.name}>Cancel All</Text>
             </TouchableOpacity>
           </View>
           <View>

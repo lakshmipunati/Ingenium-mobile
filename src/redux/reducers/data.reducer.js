@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { clearDataFields, defaltValueSetup, selectedTypeUpdate, lookupByAssetNumberAction, getUDFDataAction, udfSelectedAction, removeSelectedUDFAction } from "../actions";
+import { clearDataFields, defaltValueSetup, selectedTypeUpdate, lookupByAssetNumberAction, getUDFDataAction, udfSelectedAction, removeSelectedUDFAction, clearAllUDFSelected } from "../actions";
 
 const entity = {
     assetNumber: '',
@@ -122,6 +122,10 @@ export const lookupData = createSlice({
         [removeSelectedUDFAction.fulfilled]: (state, { payload }) => {
             let updatedList = state.entity.selectedUDFs.filter((item) => item.key != payload.key);
             state.entity.selectedUDFs = updatedList;
+        },
+
+        [clearAllUDFSelected.fulfilled]: (state, { payload }) => {
+            state.entity.selectedUDFs = [];
         },
 
         [getUDFDataAction.rejected]: (state, error) => {
