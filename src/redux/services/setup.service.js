@@ -3,18 +3,20 @@ import {
     API_BASE_PATH,
     GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
 } from '../../config';
+import { headers } from "./token.service";
 
-export const getUDFListAndConditionCodeByDataCategory = (dataCategory) => {
+export const getUDFListAndConditionCodeByDataCategory = async() => {
+    //debugger
     return axios({
         method: "GET",
         url: GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
         baseURL: API_BASE_PATH,
         params: {
-            dataCategoryName: dataCategory,
+            dataCategoryName: 'EQUIPMENT',
         },
+        headers: await headers()
     })
         .then((response) => {
-            debugger
             let { data } = response;
             data.UDFList = data.UDFList.filter(function (e) {
                 return e.FieldType != "FILE LINK";
@@ -22,9 +24,7 @@ export const getUDFListAndConditionCodeByDataCategory = (dataCategory) => {
             let transformedData = transformUDFListAndConditionCode(data);
             return transformedData;
         })
-        .catch((e) => {
-            return e;
-        });
+        .catch(({response}) =>response);
 };
 
 const transformUDFListAndConditionCode = (data) => {

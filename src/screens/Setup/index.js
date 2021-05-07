@@ -1,21 +1,36 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { ModelSelector } from '../../components';
 import { crossIcon } from '../../assets/images';
+import { udfSelectedAction, removeSelectedUDFAction } from '../../redux';
 
 export const Setup = (props) => {
-  let index = 0;
-  const data = [
-    { key: index++, section: true, label: 'Fruits' },
-    { key: index++, label: 'Red Apples' },
-    { key: index++, label: 'Cherries' },
-    { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-    { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
-  ];
-  let listitems = data;
 
-  const deleteUDF = (index) => {
-    listitems = listitems.splice(0, index);
+  let udfSelected = '';
+  const dispatch = useDispatch();
+
+  const reducerData = useSelector((state) => state.lookupData);
+  const { UDFLookupList, selectedUDFs } = reducerData.entity;
+
+  UDFLookupListItems = UDFLookupList.map((item) => (
+    { key: item.value, label: item.label }
+  ));
+
+  const deleteUDF = (selectedUDFObj) => {
+    dispatch(removeSelectedUDFAction(selectedUDFObj))
+  }
+
+  const changeUDF = (selectedId) => {
+    udfSelected = selectedId;
+  }
+
+  const saveUDF = () => {
+    if (selectedUDFs.length > 0 && !selectedUDFs.find((item) => item.key == udfSelected.key)) {
+      dispatch(udfSelectedAction(udfSelected))
+    } else if (selectedUDFs.length == 0) {
+      dispatch(udfSelectedAction(udfSelected));
+    }
   }
 
   return (
@@ -23,9 +38,9 @@ export const Setup = (props) => {
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.textClr}>User Defined Field</Text>
-          <ModelSelector listItems={data} />
+          <ModelSelector listItems={UDFLookupListItems} onChange={changeUDF} />
           <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => saveUDF()} >
               <Text style={styles.name}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn}>
@@ -33,10 +48,10 @@ export const Setup = (props) => {
             </TouchableOpacity>
           </View>
           <View>
-            {listitems &&
-              listitems.map((field, index) => {
+            {selectedUDFs &&
+              selectedUDFs.map((field, index) => {
                 return (
-                  <View style={{
+                  <View key={index} style={{
                     paddingVertical: 2,
                     paddingHorizontal: 10,
                     flexDirection: "row",
@@ -49,10 +64,10 @@ export const Setup = (props) => {
                     <ModelSelector
                       style={styles.pickerStyle}
                       selectStyle={{ height: 40, width: 150 }}
-                      listItems={listitems}
+                      listItems={selectedUDFs}
                       initValue={(field.label)}
                     />
-                    <TouchableOpacity onPress={() => deleteUDF(index)}>
+                    <TouchableOpacity onPress={() => deleteUDF(field)}>
                       <Image style={styles.cancel_icon} source={crossIcon} />
                     </TouchableOpacity>
                   </View>
