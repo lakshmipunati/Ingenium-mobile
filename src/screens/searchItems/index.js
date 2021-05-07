@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
 import { useDispatch } from "react-redux";
 import { BackArrowIcon } from "../../assets";
-import { triggerSearchItem } from "../../redux";
+import { selectedTypeUpdate, triggerSearchItem } from "../../redux";
 
 export function SearchItems(props){
     const {params} = props.route;
@@ -15,19 +15,36 @@ export function SearchItems(props){
     const _handleOnchangeText=(value)=>{
         setIsSearching(true)
         setTimeout(() => {
-            setIsSearching(false);
+            if(value.trim()!==""){
             dispatch(triggerSearchItem({type: params.title, text: value})).then(({payload})=>{
-            
                 if(payload && payload.searchResultList){
                     setSearchResultList(payload.searchResultList)
+                }else{
+                    setSearchResultList([])
                 }
-              
-
             })
-        }, 3000);
+        }else{
+            setSearchResultList([])
+        }
+        setIsSearching(false);
+        }, 1000);
     }
+    const handleSelectItem=(title, type)=>{
+        dispatch(selectedTypeUpdate({title, type})).then(({payload})=>{
+            props.navigation.navigate('Root')
+        })
+    }
+    const Item = ({ title }) => (
+        <TouchableOpacity style={styles.listCell} onPress={()=>handleSelectItem(title, params.title)}>
+            <Text style={styles.listCellText}>
+               {title}
+            </Text>
+        </TouchableOpacity>
+      );
 
-    console.log("==#payload==",searchResultList)
+    const renderItem = ({ item }) => (
+        <Item title={item.key} />
+      );
 
     return(
         <View style={styles.container}>
@@ -54,12 +71,11 @@ export function SearchItems(props){
                         <Text style={styles.searchLabel}>Searching...</Text> 
                         :  
                       searchResultList && searchResultList.length>0 ? (
-                          searchResultList.map((i, k)=>(
-                              <TouchableOpacity key={k}  style={styles.listCell}>
-                                  <Text  style={[styles.listCellText]}>{i.key}</Text>
-                              </TouchableOpacity>
-                          ))
-                      ): null
+                        <FlatList
+                            data={searchResultList}
+                            renderItem={renderItem}
+                        />
+                      ):  null
                     }
                   
                 </View>

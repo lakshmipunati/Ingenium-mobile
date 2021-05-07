@@ -4,39 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ModelSelector } from '../../components';
 import { BarCodeScanner } from '../../components/bar-code-scanner';
 import { SharedTextInput } from '../../components/text-input';
-import { lookupByAssetNumberAction } from '../../redux';
+import { clearDataFields, defaltValueSetup, lookupByAssetNumberAction, selectedTypeUpdate } from '../../redux';
 import { anchorIcon } from "../../assets/images";
 
 const {width, height} = Dimensions.get('screen');
 
 export const Data = (props) => {
-    const init = {
-        assetNumber: '',
-        location: '',
-        descriptionID: ''
-    }
-    const [state, setState]=useState(init);
+
     const [scanned, setScanned] = useState({activeTab: '', status: false});
     const reducerData = useSelector((state)=>state.dataTab);
-    const {location, descriptionID, errorMsg} = reducerData.entity;
+    const {location, descriptionID, errorMsg, assetNumber, defaultValues} = reducerData.entity;
+ 
     const dispatch = useDispatch();
-
     const data = [
         { key: 1, section: true, label: 'Fruits' },
         { key: 2, label: 'Red Apples' },
       ];
       let listitems = data;
 
-
-    if(reducerData.errorMsg){
-        Alert.alert(reducerData.errorMsg)
-    }
-  
     const onChangeText=(name, value)=>{
-        setState((prev)=>({
-            ...prev,
-            [name]: value
-        }))
+        dispatch(selectedTypeUpdate({title: value, type: name}))
     }
 
     const onClickScanner=(activeTab)=>{
@@ -48,16 +35,14 @@ export const Data = (props) => {
     }
 
     const handleAferScann=(status, data, activeTab)=>{
-        setState((prev)=>({
-            ...prev,
-            [activeTab]: data
-        }));
+        dispatch(selectedTypeUpdate({title: data, type: activeTab}))
         setScanned({status, activeTab: ''})
     }
 
-    const onClickLookup=(name)=>{
-        if(state[name] && (state[name]).trim()!==""){
-            dispatch(lookupByAssetNumberAction(state[name]))
+    const onClickLookup=(name, number)=>{
+        
+        if(number && number.trim()!==""){
+            dispatch(lookupByAssetNumberAction(number))
         }
     }
 
@@ -67,6 +52,14 @@ export const Data = (props) => {
             title,
             params: {title}
         })
+    }
+
+    const onClickDefault=(name)=>{
+        if(name){
+            console.log("===#nam=====",name)
+            dispatch(defaltValueSetup({status: !defaultValues[name], name}));
+        }
+       
     }
 
     return (
@@ -84,10 +77,10 @@ export const Data = (props) => {
                                     label="Asset Number"
                                     name="assetNumber"
                                     placeholder="" 
-                                    value={state.assetNumber}
-                                    style={{minWidth: 262}}
+                                    value={assetNumber}
+                                    style={{minWidth: width-118}}
                                     onClickScanner={(activeTab)=>onClickScanner(activeTab)}
-                                    onClickLookup={(name)=>onClickLookup(name)}
+                                    onClickLookup={(name)=>onClickLookup(name,assetNumber)}
                                     onChangeText={(name, value)=>onChangeText(name, value)}
                                     isLookup
                                     isScanner
@@ -98,10 +91,10 @@ export const Data = (props) => {
                                     label="Description ID"
                                     name="descriptionID"
                                     placeholder="" 
-                                    value={descriptionID && descriptionID !=="" ? descriptionID.toString() : state.descriptionID}
+                                    value={descriptionID.toString()}
                                     onChangeText={(name, value)=>onChangeText(name, value)}
                                     onClickLookup
-                                    style={{minWidth: 262}}
+                                    style={{minWidth: width-118}}
                                     isLookup
                                 />
                             </View>
@@ -110,11 +103,17 @@ export const Data = (props) => {
                                     label="Location"
                                     name="location"
                                     placeholder="" 
-                                    style={{minWidth: 221}}
-                                    value={ location && location!== "" ? location : state.location}
+                                    style={{
+                                        minWidth: width-159, 
+                                        borderColor: defaultValues.location ? 'red' : '#B5B3B2',
+                                        color: defaultValues.location ? 'red' : 'black',
+                                        borderWidth: defaultValues.location ? 2 : 1,
+                                    }}
+                                    value={location}
                                     onClickScanner={(activeTab)=>onClickScanner(activeTab)}
                                     onChangeText={(name, value)=>onChangeText(name, value)}
                                     onClickSearch={(title)=>handleOnclickSearch(title)}
+                                    onClickDefault={(name)=>onClickDefault(name)}
                                     isDefault
                                     isScanner
                                     isSearch
@@ -143,8 +142,8 @@ export const Data = (props) => {
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.rightContainer}>
-                                    <TouchableOpacity style={styles.btn}>
-                                        <Text style={styles.name}>Cancel</Text>
+                                    <TouchableOpacity style={styles.btn} onPress={()=>dispatch(clearDataFields())}>
+                                        <Text style={styles.name}>Clear</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

@@ -14,3 +14,15 @@ export const triggerSearchItem=createAsyncThunk('data/itemsearch',async(obj)=>{
     }
 
 })
+
+export const selectedTypeUpdate=createAsyncThunk('data/update-type',async(obj)=>{
+    return obj
+})
+
+export const clearDataFields=createAsyncThunk('data/clear-type',async(obj)=>{
+    return false
+})
+
+export const defaltValueSetup=createAsyncThunk('data/default-type',async(obj)=>{
+   return obj;
+})

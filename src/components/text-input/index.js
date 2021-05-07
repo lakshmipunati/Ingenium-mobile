@@ -38,7 +38,7 @@ export function SharedTextInput(props) {
                         : null }
 
                         {props.isDefault ? 
-                            <TouchableOpacity style={styles.button} >
+                            <TouchableOpacity style={styles.button} onPress={()=>props.onClickDefault(props.name)}>
                                 <Image style={styles.iconStyle} source={anchorIcon} />
                             </TouchableOpacity>
                         : null }
@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
     }, 
     sharedInputBox: {
         borderWidth: 1,
-        padding: 12,
+        paddingLeft: 10,
+        paddingRight: 10,
         borderRadius: 8,
         borderColor: '#B5B3B2',
         fontSize: 16,
@@ -125,8 +126,8 @@ const styles = StyleSheet.create({
     iconStyle: {
         borderWidth: 1,
         borderColor: "#ccc",
-        width: 41,
-        height: 50,
+        width: 40,
+        height: 45,
         marginTop: 0,
         borderRadius: 10,
         marginLeft: -5
