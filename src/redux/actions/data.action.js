@@ -8,3 +8,11 @@ export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-num
 export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async () => {
     return await getUDFListAndConditionCodeByDataCategory();
 })
+
+export const udfSelectedAction = createAsyncThunk('setup/udfselected', async (selectedudf) => {
+    return selectedudf;
+})
+
+export const removeSelectedUDFAction = createAsyncThunk('setup/removeudfselected', async (selectedudf) => {
+    return selectedudf;
+})

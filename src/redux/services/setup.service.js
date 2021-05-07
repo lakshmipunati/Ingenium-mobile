@@ -17,7 +17,6 @@ export const getUDFListAndConditionCodeByDataCategory = async() => {
         headers: await headers()
     })
         .then((response) => {
-             debugger
             let { data } = response;
             data.UDFList = data.UDFList.filter(function (e) {
                 return e.FieldType != "FILE LINK";

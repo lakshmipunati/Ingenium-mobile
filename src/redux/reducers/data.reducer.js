@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { lookupByAssetNumberAction, getUDFDataAction } from "../actions";
+import { lookupByAssetNumberAction, getUDFDataAction, udfSelectedAction, removeSelectedUDFAction } from "../actions";
 
 const entity = {
     assetID: '',
@@ -13,13 +13,15 @@ const entity = {
     descriptionID: '',
     location: '',
     selectedConditionCode: "O",
-    UDFList: []
+    UDFList: [],
 }
 
 const lookupEntity = {
     UDFLookupList: [],
-    conditionCodeList: []
+    conditionCodeList: [],
+    selectedUDFs: []
 }
+
 
 export const dataTab = createSlice({
     name: 'login',
@@ -56,24 +58,25 @@ export const lookupData = createSlice({
             state.errorMsg = undefined;
         },
         [getUDFDataAction.fulfilled]: (state, { payload }) => {
-           if (payload.userDefinedFields) {
+            if (payload.userDefinedFields) {
                 state.errorMsg = undefined
                 state.entity.UDFLookupList = payload.userDefinedFields
             } else {
                 state.entity.UDFLookupList = [];
             }
         },
-        // [getUDFDataAction.fulfilled]: (state, { payload }) => {
-        //     //debugger
-        //     if (payload.conditionCodeList) {
-        //         state.errorMsg = undefined
-        //         state.lookupEntity.conditionCodeList = payload.userDefinedFields
-        //     } else {
-        //         state.lookupEntity.conditionCodeList = [];
-        //     }
-        // },
+        [udfSelectedAction.fulfilled]: (state, { payload }) => {
+            state.entity.selectedUDFs = [...state.entity.selectedUDFs, payload];
+        },
+
+        [removeSelectedUDFAction.fulfilled]: (state, { payload }) => {
+            let updatedList = state.entity.selectedUDFs.filter((item) => item.key != payload.key);
+            state.entity.selectedUDFs = updatedList;
+        },
+
         [getUDFDataAction.rejected]: (state, error) => {
             state.loading = false
         }
     }
 }).reducer;
+

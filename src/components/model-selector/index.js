@@ -13,7 +13,7 @@ export function ModelSelector(props) {
                     data={props.listItems}
                     accessible={true}
                     initValue={(props.listItems.length!=0 && props.listItems[0].label)}
-                // onChange={(option) => { this.onSelectionChange(option.key) }} 
+                    onChange={(option) => { props.onChange(option) }}
                 />
             </View>
         </View>
