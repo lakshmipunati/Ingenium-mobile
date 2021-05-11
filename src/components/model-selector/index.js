@@ -4,7 +4,6 @@ import ModalPicker from 'react-native-modal-selector';
 
 
 export function ModelSelector(props) {
-    // debugger
     return (
         <View style={styles.container}>
             <View style={styles.pickerContainer}>

@@ -62,6 +62,10 @@ export const removeSelectedUDFAction = createAsyncThunk('setup/removeudfselected
     return selectedudf;
 })
 
+export const clearAllUDFSelected = createAsyncThunk('setup/clearalludfs', async () => {
+    return;
+})
+
 export const triggerSearchItem = createAsyncThunk('data/itemsearch', async (obj) => {
     const { type, text, isUdfField } = obj;
     if (!isUdfField) {

@@ -58,7 +58,7 @@ function TabSetupNavigator() {
       <TabSetupStack.Screen
         name="TabOneScreen"
         component={Setup}
-        options={HeaderContainer('Setup')}
+        options={HeaderContainer('Setup Form')}
       //  options={{ headerTitle: 'Tab Setup Title' }}
       />
     </TabSetupStack.Navigator>
@@ -73,7 +73,7 @@ function TabDataNavigator() {
       <TabDataStack.Screen
         name="TabTwoScreen"
         component={Data}
-        options={HeaderContainer('Data')}
+        options={HeaderContainer('Data Form')}
       />
     </TabDataStack.Navigator>
   );
@@ -88,7 +88,7 @@ function TabDescriptionNavigator() {
       <TabDescritionStack.Screen
         name="TabDescriptionScreen"
         component={Description}
-        options={HeaderContainer('Description')}
+        options={HeaderContainer('Description Catalog Form')}
       />
     </TabDescritionStack.Navigator>
   );
@@ -102,7 +102,7 @@ function TabUdfNavigator() {
       <TabUdfStack.Screen
         name="TabDescriptionScreen"
         component={UDFData}
-        options={HeaderContainer('UDF')}
+        options={HeaderContainer('UDF Form')}
       />
     </TabUdfStack.Navigator>
   );

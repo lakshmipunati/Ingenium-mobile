@@ -1,30 +1,41 @@
 import React from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Text } from 'react-native';
 import { useSelector } from 'react-redux';
-// import { LabelValue } from '../../components/label-value';
+import { LabelValue } from '../../components/label-value';
 
-export const UDFData=(props)=>{
-    const reducerData = useSelector((state)=>state.dataTab);
+export const UDFData = (props) => {
+    const reducerData = useSelector((state) => state.lookupData);
+    const { selectedUDFs } = reducerData.entity;
 
-    // const {} = reducerData.entity;
+    const dataRendering = () => {
+        if (selectedUDFs.length > 0) {
+            return (
+                <View>
+                    {selectedUDFs &&
+                        selectedUDFs.map((field, index) => {
+                            return (
+                                <ScrollView>
+                                    <LabelValue label={field.label} value={null} />
+                                </ScrollView>
+                            )
+                        })
+                    }
 
-    return(
+                </View>
+            )
+        } else {
+            return (
+                <View>
+                    <Text style={{ textAlign: 'center', fontSize: 16 }}> UDF data not Available</Text>
+                </View>
+            )
+        }
+    }
+
+    return (
         <View style={styles.container}>
             <KeyboardAvoidingView>
-                <ScrollView>
-                    {/* <LabelValue label={"Description ID"} value={descriptionID ? descriptionID: null} />
-                    <LabelValue label={"Product Category"} value={manufacturer ? manufacturer : null} />
-                    <LabelValue label={"Description"} value={description ? description : null} />
-                    <LabelValue label={"Manufacturer"} value={manufacturer ? manufacturer : null} />
-                    <LabelValue label={"Product Number"} value={productNumber ? productNumber : null} />
-                    <LabelValue label={"User Code"} value={userCode ? userCode : null} /> */}
-                    {/* <Text style={styles.product_label}>Product Image :</Text> */}
-                    {/* <ProductImage
-                        imageStyle={styles.productImage}
-                        resizeMode="contain"
-                        imageSource={{ uri: productImageURI }}
-                    /> */}
-                </ScrollView>
+                {dataRendering()}
             </KeyboardAvoidingView>
         </View>
     )
@@ -37,6 +48,6 @@ const styles = StyleSheet.create({
     },
     product_label: {
         fontWeight: 'bold', fontSize: 16, paddingTop: 4,
-        color:'#A9A9A9'
+        color: '#A9A9A9'
     }
 })

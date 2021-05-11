@@ -1,6 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { clearDataFields, defaltValueSetup, selectedTypeUpdate, lookupByAssetNumberAction, getUDFDataAction, udfSelectedAction, removeSelectedUDFAction, udfFieldLookup } from "../actions";
-
+import { 
+        clearDataFields, 
+        defaltValueSetup, 
+        selectedTypeUpdate, 
+        lookupByAssetNumberAction, 
+        getUDFDataAction, 
+        udfSelectedAction, 
+        removeSelectedUDFAction, 
+        udfFieldLookup, 
+        clearAllUDFSelected 
+    } from "../actions";
 const entity = {
     unitCost: '0',
     productCategory: '6100',
@@ -129,6 +138,10 @@ export const dataTab = createSlice({
             state.loading = false;
             let updatedList = state.entity.selectedUDFs.filter((item) => item.key != payload.key);
             state.entity.selectedUDFs = updatedList;
+        },
+
+        [clearAllUDFSelected.fulfilled]: (state, { payload }) => {
+            state.entity.selectedUDFs = [];
         },
 
         [getUDFDataAction.rejected]: (state, error) => {
