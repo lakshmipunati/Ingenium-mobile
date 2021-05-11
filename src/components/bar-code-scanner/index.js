@@ -13,7 +13,7 @@ export function BarCodeScanner(props) {
     }, []);
   
     const handleBarCodeScanned = ({ type, data }) => {
-      props.setScanned(false, data, props.activeTab)
+      props.setScanned(false, data, props.activeTab, props.isUdf)
     };
   
     if (hasPermission === null) {

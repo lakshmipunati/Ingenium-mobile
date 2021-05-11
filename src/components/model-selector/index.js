@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import ModalPicker from 'react-native-modal-selector';
 
+
 export function ModelSelector(props) {
     // debugger
     return (
         <View style={styles.container}>
             <View style={styles.pickerContainer}>
                 <ModalPicker
-                    style={styles.pickerStyle}
+                    style={props.isConditionCodeEnable ? styles.pickerStyleDanger : styles.pickerStyle}
                     selectStyle={{ height: 45 }}
                     data={props.listItems}
                     accessible={true}
-                    initValue={(props.listItems.length!=0 && props.listItems[0].label)}
+                    initValue={props.initValue ? props.initValue : (props.listItems.length!=0 && props.listItems[0].label)}
                     onChange={(option) => { props.onChange(option) }}
                 />
             </View>
@@ -34,5 +35,12 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         flex: 1,
         height: 45
+    },
+    pickerStyleDanger: {
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: 'red',
+        flex: 1,
+        height: 45,
     }
 });

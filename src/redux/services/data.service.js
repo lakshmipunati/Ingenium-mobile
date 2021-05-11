@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_PATH, ASSETNUMBER_LOOKUP, SEARCH_LOCATION } from "../../config";
+import { API_BASE_PATH, ASSETNUMBER_LOOKUP, SEARCH_LOCATION, UDF_SUGGESTION } from "../../config";
 import {headers} from "./token.service"
 
 
@@ -56,7 +56,24 @@ export const searchLocationAPI=async(text)=>{
     }).then((response) => {
         let { data } = response;
         return transformLocationList(data);
-    }).catch(({response})=>console.log("==#res Error: ===",response))
+    }).catch(({response})=>response)
+}
+
+
+export const getUDFSuggestionsAPI = async(text, fieldType) => {
+    return axios({
+        method: 'GET',
+        url: UDF_SUGGESTION,
+        baseURL: API_BASE_PATH,
+        params: {
+            text,
+            fieldType
+        },
+        headers: await headers()
+    }).then((response) => {
+        let { data } = response;
+        return transformUDFSuggestionList(data);
+    })
 }
 
 const transformLocationList = (data) => {
@@ -66,4 +83,13 @@ const transformLocationList = (data) => {
         }
     ));
     return { searchResultList: locations };
+}
+
+const transformUDFSuggestionList = (data) => {
+    let suggestions = data.map((item) => (
+        {
+            key: item
+        }
+    ));
+    return { searchResultList: suggestions };
 }

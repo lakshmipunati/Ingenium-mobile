@@ -13,8 +13,7 @@ export const login=createSlice({
     reducers: {},
     extraReducers: {
         [loginUser.pending]:(state)=>{
-            state.loading = true,
-            state.loading = false
+            state.loading = true
         },
         [loginUser.fulfilled]:(state,actions)=>{
             state.loading = false,
@@ -29,10 +28,17 @@ export const login=createSlice({
             state.loading = true,
             state.isLogin=false
         },
-        [logoutUser.fulfilled]:(state, actions)=>{
+        [logoutUser.fulfilled]:(state, {payload})=>{
+            console.log("===#data==",payload)
+            if(payload){
+                state.loading = false,
+                state.entity =undefined,
+                state.isLogin = false
+            }
+           else{
             state.loading = false,
-            state.entity =undefined,
             state.isLogin = false
+           }
         },
         [logoutUser.rejected]:(state,error)=>{
             state.loading = false
