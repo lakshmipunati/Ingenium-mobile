@@ -10,11 +10,11 @@ export const Setup = (props) => {
   let udfSelected = '';
   const dispatch = useDispatch();
 
-  const reducerData = useSelector((state) => state.lookupData);
+  const reducerData = useSelector((state) => state.dataTab);
   const { UDFLookupList, selectedUDFs } = reducerData.entity;
 
-  UDFLookupListItems = UDFLookupList.map((item) => (
-    { key: item.value, label: item.label }
+  const UDFLookupListItems = UDFLookupList.map((item) => (
+    { key: item.value, label: item.label, fieldType: item.fieldType }
   ));
 
   const deleteUDF = (selectedUDFObj) => {

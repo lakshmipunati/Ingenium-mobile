@@ -13,12 +13,15 @@ export function SharedTextInput(props) {
                 <View>
                     <Text style={styles.label}>{props.label}</Text>
                     <View style={styles.componentContainer}>
-                        <TextInput style={[styles.sharedInputBox,props.style]}
+                        <TextInput 
+                            // style={[styles.sharedInputBox,props.style]}
+                            keyboardType={props.keyboardType}
                             name={props.name}
                             placeholder={props.placeholder}
                             value={props.value}
                             onChangeText={(value)=>props.onChangeText(props.name, value)}
-                            // value={props.value}
+                            editable={props.editable ? false: true}
+                            style={[styles.sharedInputBox,props.style]}  
                             underlineColorAndroid="rgba(0,0,0,0)"
                        /> 
                         {props.isSearch ? 
@@ -80,13 +83,13 @@ export function TextInputWithIcon(props){
 const styles = StyleSheet.create({
     inputBox: {
         borderWidth: 1,
-        padding: 12,
+        padding: 10,
         paddingLeft: 50,
         paddingRight: 50,
         borderRadius: 8,
         borderColor: '#B5B3B2',
         fontSize: 16,
-        height:40
+        height:50
     }, 
     sharedInputBox: {
         borderWidth: 1,

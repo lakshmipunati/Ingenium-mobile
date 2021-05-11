@@ -16,7 +16,7 @@ export function SearchItems(props){
         setIsSearching(true)
         setTimeout(() => {
             if(value.trim()!==""){
-            dispatch(triggerSearchItem({type: params.title, text: value})).then(({payload})=>{
+            dispatch(triggerSearchItem({type: params.title, text: value, isUdfField: params.isUdfField})).then(({payload})=>{
                 if(payload && payload.searchResultList){
                     setSearchResultList(payload.searchResultList)
                 }else{
@@ -30,7 +30,7 @@ export function SearchItems(props){
         }, 1000);
     }
     const handleSelectItem=(title, type)=>{
-        dispatch(selectedTypeUpdate({title, type})).then(({payload})=>{
+        dispatch(selectedTypeUpdate({title, type, isUdfField: params.isUdfField})).then(({payload})=>{
             props.navigation.navigate('Root')
         })
     }

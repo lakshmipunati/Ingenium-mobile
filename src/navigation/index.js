@@ -5,10 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Login, SearchItems } from "../screens"
 import BottomTabNavigator from './BottomTabNavigator';
-import {retrieveTokenFromStorage, removeAccessTokenFromStorage} from "../redux"
-import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { LogoWithVersion } from '../components';
+import { PageLoader } from '../components';
   
   const Tab = createBottomTabNavigator();
   
@@ -18,26 +16,24 @@ import { LogoWithVersion } from '../components';
     const state = useSelector((state)=>state.login);
 
     useEffect(()=>{
+      setLoader(true)
       tokenService();
-    },[loader, isLogin, state]);
+    },[isLogin, state]);
 
     const tokenService=async()=>{   
-      setLoader(state.loading)
       const d = await state.isLogin;
       setIsLogin(d ? true : false);
+      setLoader(state.loading)
     }
 
     if(loader){
-      return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          {/* <LogoWithVersion /> */}
-          <Text>Loading...</Text>
-        </View>
+      return (  
+          <PageLoader loading={true}/>
       )
     }
     return (
       <NavigationContainer>
-        {isLogin ? <RootNavigator {...props}/> : <LoginNavigator /> }
+        {isLogin && !loader ? <RootNavigator {...props}/> : <LoginNavigator /> }
       </NavigationContainer>
     );
   }

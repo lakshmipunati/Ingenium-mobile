@@ -8,7 +8,7 @@ import {
     ScrollView, 
     TouchableOpacity 
 } from 'react-native';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {     
     USerIcon, 
     ContactIcon, 
@@ -16,10 +16,14 @@ import {
     HideIcon, 
     VisibleIcon
 } from "../../assets";
-import { TextInputWithIcon, SharedButton, LogoWithVersion } from '../../components';
+import { 
+        TextInputWithIcon, 
+        SharedButton, 
+        LogoWithVersion 
+    } from '../../components';
 import { loginUser } from "../../redux";
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get('screen');
 
 export function Login(props){
 
@@ -29,6 +33,7 @@ export function Login(props){
         password: 'Testing1#',
     };
 
+    const reducer = useSelector((state)=>state.login);
     const [state, setState ] = useState(init);
     const [visiblePassword, setVisiblePassword] = useState(false);
 
@@ -42,80 +47,70 @@ export function Login(props){
     }
 
     const _hanldeOnClick=()=>{
-        dispatch(loginUser(state)).then(({payload})=>{
-            // console.log("===#222data===",payload)
-        })
+        dispatch(loginUser(state))
     }
 
     return(
-        <View style={{position: 'relative'}}>
-            <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={styles.scrollContainer}>        
-                <View style={styles.container} >
-                    <View style={styles.componentContainer}>
-                        <LogoWithVersion />
-                        {/* <View style={styles.logoContainer}>
-                            <Image
-                                style={styles.logo}
-                                source={ingeniumLogo}
-                                resizeMode="contain"
-                            />            
-                            <Text style={styles.versionText}>V2.2</Text>        
-                        </View> */}
-                        <View style={styles.formContainer}>
-                            <View style={styles.inputContainer}>
-                                <TextInputWithIcon
-                                    name="companyID"
-                                    keyboardType="email-address"
-                                    value={state.companyID}
-                                    placeholder="Commpany ID"
-                                    onChangeText={(name, value)=>_handleChangeText(name, value)}
-                                    leftIcon={<ContactIcon height="40px" width="25px" fill="#B5B3B2" />}
-                                />
+            <View style={{position: 'relative'}}>
+                <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={styles.scrollContainer}>        
+                    <View style={styles.container} >
+                        <View style={styles.componentContainer}>
+                            <LogoWithVersion />                           
+                            <View style={styles.formContainer}>
+                                <View style={styles.inputContainer}>
+                                    <TextInputWithIcon
+                                        name="companyID"
+                                        keyboardType="email-address"
+                                        value={state.companyID}
+                                        placeholder="Commpany ID"
+                                        onChangeText={(name, value)=>_handleChangeText(name, value)}
+                                        leftIcon={<ContactIcon height="30px" width="25px" fill="#B5B3B2" />}
+                                    />
+                                </View>
+                                <View style={styles.inputContainer}>
+                                    <TextInputWithIcon
+                                        name="userName"
+                                        keyboardType="email-address"
+                                        value={state.userName}
+                                        placeholder="User ID"
+                                        onChangeText={(name, value)=>_handleChangeText(name, value)}
+                                        leftIcon={<USerIcon height="30px" width="25px" fill="#B5B3B2" />}
+                                    />
+                                </View>
+                                <View style={styles.inputContainer}>
+                                    <TextInputWithIcon
+                                        name="password"
+                                        value={state.password}
+                                        placeholder="Password"
+                                        secureTextEntry={!visiblePassword}
+                                        onChangeText={(name, value)=>_handleChangeText(name, value)}
+                                        leftIcon={<LockIcon height="30px" width="25px" fill="#B5B3B2" />}
+                                        rightIcon={ 
+                                            visiblePassword 
+                                            ?(                                         
+                                                <TouchableOpacity onPress={()=>setVisiblePassword(!visiblePassword)}>
+                                                    <HideIcon height="30px" width="25px" fill="#B5B3B2" />
+                                                </TouchableOpacity>
+                                            )
+                                            : (                                      
+                                                <TouchableOpacity onPress={()=>setVisiblePassword(!visiblePassword)}>
+                                                    <VisibleIcon height="30px" width="25px" fill="#B5B3B2" />
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                    />
+                                </View>
+                                <View style={[styles.inputContainer,{marginTop: 30}]}>
+                                    <SharedButton name="LOG IN" onPress={()=>_hanldeOnClick()}/>
+                                </View>
                             </View>
-                            <View style={styles.inputContainer}>
-                                <TextInputWithIcon
-                                    name="userName"
-                                    keyboardType="email-address"
-                                    value={state.userName}
-                                    placeholder="User ID"
-                                    onChangeText={(name, value)=>_handleChangeText(name, value)}
-                                    leftIcon={<USerIcon height="40px" width="25px" fill="#B5B3B2" />}
-                                />
-                            </View>
-                            <View style={styles.inputContainer}>
-                                <TextInputWithIcon
-                                    name="password"
-                                    value={state.password}
-                                    placeholder="Password"
-                                    secureTextEntry={!visiblePassword}
-                                    onChangeText={(name, value)=>_handleChangeText(name, value)}
-                                    leftIcon={<LockIcon height="40px" width="25px" fill="#B5B3B2" />}
-                                    rightIcon={ 
-                                        visiblePassword 
-                                        ?(                                         
-                                            <TouchableOpacity onPress={()=>setVisiblePassword(!visiblePassword)}>
-                                                <HideIcon height="40px" width="25px" fill="#B5B3B2" />
-                                            </TouchableOpacity>
-                                        )
-                                        : (                                      
-                                            <TouchableOpacity onPress={()=>setVisiblePassword(!visiblePassword)}>
-                                                <VisibleIcon height="40px" width="25px" fill="#B5B3B2" />
-                                            </TouchableOpacity>
-                                        )
-                                    }
-                                />
-                            </View>
-                            <View style={styles.inputContainer}>
-                                <SharedButton name="LOG IN" onPress={()=>_hanldeOnClick()}/>
-                            </View>
-                        </View>
-                    </View>    
+                        </View>    
+                    </View>
+                </ScrollView>
+                <View style={styles.footerContainer}>
+                    <Text style={styles.footerText}>Copyright © Asset Systems</Text>
                 </View>
-            </ScrollView>
-            <View style={styles.footerContainer}>
-                <Text style={styles.footerText}>Copyright © Asset Systems</Text>
             </View>
-        </View>
     )
 }
 
@@ -126,13 +121,13 @@ const styles = StyleSheet.create({
         marginTop: 100,
         marginLeft: 20,
         marginRight: 20,
-        minHeight: height - 120,
+        minHeight: height - 150,
     },
     formContainer:{
-        marginTop: 25
+        marginTop: 40
     },
     inputContainer:{
-        marginTop: 20
+        marginTop: 1
     },
     footerText: {
         textAlign: 'center'
