@@ -1,4 +1,4 @@
-export const LOGIN_API = '/login';
+export const LOGIN_API = '/security/authenticate';
 
 export const LOGOUT_API = '/api/MobileApi/Logout'
 

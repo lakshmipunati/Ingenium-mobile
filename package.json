@@ -15,6 +15,7 @@
     "@react-navigation/stack": "^5.14.4",
     "@reduxjs/toolkit": "^1.5.1",
     "axios": "^0.21.1",
+    "axios-case-converter": "^0.7.0",
     "expo": "~41.0.1",
     "expo-barcode-scanner": "~10.1.2",
     "expo-status-bar": "~1.0.4",

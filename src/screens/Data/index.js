@@ -26,7 +26,6 @@ export const Data = (props) => {
 
     const { 
             location, 
-            errorMsg, 
             assetNumber, 
             defaultValues, 
             selectedConditionCode,

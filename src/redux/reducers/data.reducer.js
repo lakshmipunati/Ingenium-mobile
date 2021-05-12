@@ -119,7 +119,8 @@ export const dataTab = createSlice({
         },
         [getUDFDataAction.fulfilled]: (state, { payload }) => {
                 state.loading = false;
-                state.errorMsg = undefined
+                state.errorMsg = undefined;
+                state.entity.selectedUDFs = payload.selectedUDFs ? payload.selectedUDFs : [];
                 state.entity.UDFLookupList = payload.userDefinedFields ? payload.userDefinedFields : [];
                 state.entity.conditionCodeList=payload.conditionCode ? payload.conditionCode : []
         },

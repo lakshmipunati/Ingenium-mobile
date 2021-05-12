@@ -4,7 +4,11 @@ import {
         assetNumberLookupAPI, 
         getUDFListAndConditionCodeByDataCategory, 
         searchLocationAPI,
-        getUDFSuggestionsAPI
+        getUDFSuggestionsAPI,
+        addSelectedUDFData,
+        getSelectedUDFData,
+        clearAllSelectedUDFData,
+        clearSelectedSelectedUDFData
     } from "../services";
 
 export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-number', async (assetNumber, {getState}) => {
@@ -51,18 +55,27 @@ export const udfFieldLookup=createAsyncThunk('scanner/udffield',async(obj, {getS
 })
 
 export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async () => {
-    return await getUDFListAndConditionCodeByDataCategory();
+    const response =  await getUDFListAndConditionCodeByDataCategory();
+    const storeData = await getSelectedUDFData();
+    const obj ={
+        ...response,
+        selectedUDFs: storeData
+    }
+    return obj
 })
 
-export const udfSelectedAction = createAsyncThunk('setup/udfselected', async (selectedudf) => {
-    return selectedudf;
+export const udfSelectedAction = createAsyncThunk('setup/udfselected', async (data) => {
+   await addSelectedUDFData(data)
+    return data;
 })
 
 export const removeSelectedUDFAction = createAsyncThunk('setup/removeudfselected', async (selectedudf) => {
+    await clearSelectedSelectedUDFData(selectedudf)
     return selectedudf;
 })
 
 export const clearAllUDFSelected = createAsyncThunk('setup/clearalludfs', async () => {
+    await clearAllSelectedUDFData()
     return;
 })
 

@@ -28,9 +28,12 @@ const { height } = Dimensions.get('screen');
 export function Login(props){
 
     const init = {
-        companyID:'Alden',
-        userName: 'pradyot@nalashaa.com',
-        password: 'Testing1#',
+        // companyID:'Alden',
+        // userName: 'pradyot@nalashaa.com',
+        // password: 'Testing1#',
+        companyID: 'C00121',
+        userName: 'user1@assetsystems.com',
+        password: 'Testing1#'
     };
 
     const reducer = useSelector((state)=>state.login);

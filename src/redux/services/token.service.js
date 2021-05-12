@@ -53,3 +53,62 @@ export const headers=async()=>{
         CompanyCode: data[1][1]
     }
 }
+
+export const addSelectedUDFData=async(data)=>{
+    try {
+        const result = [];
+        const token = await retrieveTokenFromStorage();
+        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[1][1]}`);
+        if(getStore===null){
+            
+            result.push(data)
+        }else{
+            const array = JSON.parse(getStore)
+            result.push(...array);
+            const index = result.findIndex((i)=>i.label===data.label);
+            if(index===-1){
+                result.push(data)
+            }
+        }
+        await AsyncStorage.setItem(`SELECTED-UDF-${token[1][1]}`, JSON.stringify(result));
+        return result
+    } catch (error) {
+        console.log(error)
+    }
+ 
+}
+
+export const getSelectedUDFData=async()=>{
+        const token = await retrieveTokenFromStorage();
+        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[1][1]}`);
+        if(getStore===null){
+            return []
+        }
+        return JSON.parse(getStore)
+}
+
+export const clearSelectedSelectedUDFData=async(data)=>{
+    try {
+        const token = await retrieveTokenFromStorage();
+        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[1][1]}`);
+        if(getStore===null){
+            return [];
+        }else{
+            const arr = JSON.parse(getStore);
+            const list = arr.filter((i)=>i.label!==data.label);
+            await AsyncStorage.setItem(`SELECTED-UDF-${token[1][1]}`, JSON.stringify(list));
+            return list;
+        }
+    } catch (error) {
+        console.log("Store clear all Error : ",error)
+    }   
+}
+
+export const clearAllSelectedUDFData=async()=>{
+    try {
+        const token = await retrieveTokenFromStorage();
+        return await AsyncStorage.removeItem(`SELECTED-UDF-${token[1][1]}`);
+    } catch (error) {
+        console.log("Store clear all Error : ",error)
+    }   
+}
