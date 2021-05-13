@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { LabelValue } from '../../components/label-value';
 
 export const UDFData = (props) => {
-    const reducerData = useSelector((state) => state.lookupData);
+    const reducerData = useSelector((state) => state.dataTab);
     const { selectedUDFs } = reducerData.entity;
 
     const dataRendering = () => {

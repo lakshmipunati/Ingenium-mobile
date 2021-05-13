@@ -5,11 +5,12 @@ import {
 } from '../../config';
 import { headers } from "./token.service";
 
-export const getUDFListAndConditionCodeByDataCategory = async() => {
+export const getUDFListApi = async() => {
     //debugger
     return axios({
         method: "GET",
-        url: GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
+        // url: GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
+        url: '/userdefinedfields',
         baseURL: API_BASE_PATH,
         params: {
             dataCategoryName: 'EQUIPMENT',
@@ -18,31 +19,35 @@ export const getUDFListAndConditionCodeByDataCategory = async() => {
     })
         .then((response) => {
             let { data } = response;
-            data.UDFList = data.UDFList.filter(function (e) {
+            data.UDFList = data.filter(function (e) {
                 return e.FieldType != "FILE LINK";
             });
-            let transformedData = transformUDFListAndConditionCode(data);
+            let transformedData = transformUDFList(data);
             return transformedData;
         })
         .catch(({response}) =>response);
 };
 
-const transformUDFListAndConditionCode = (data) => {
-    let { UDFList, ConditionCodes } = data;
-    let conditionCode = ConditionCodes.map((item) => ({
-        label: item.Name,
-        value: item.ID,
-    }));
+const transformUDFList = (UDFList) => {
+    // let { UDFList, ConditionCodes } = data;
+    // let conditionCode = ConditionCodes.map((item) => ({
+    //     label: item.Name,
+    //     value: item.ID,
+    // }));
+  
     let userDefinedFields = UDFList.map((item, index) => ({
-        label: item.Name,
-        value: item.ID,
-        fieldType: item.FieldType,
-        fieldLength: item.FieldLength,
+        key: index,
+        label: item.userDefinedField,
+        id: item.id,
+        defaultData: item.defaultData,
+        // value: item.fieldData,
+        fieldType: item.fieldType,
+        fieldLength: item.fieldLength,
         data: null,
         isRequired: item.IsRequired,
     }));
     return {
         userDefinedFields,
-        conditionCode,
+        // conditionCode,
     };
 };

@@ -2,9 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { showAlert } from "../../components";
 import { 
         assetNumberLookupAPI, 
-        getUDFListAndConditionCodeByDataCategory, 
+        // getUDFListAndConditionCodeByDataCategory, 
         searchLocationAPI,
-        getUDFSuggestionsAPI
+        getUDFSuggestionsAPI,
+        addSelectedUDFData,
+        getSelectedUDFData,
+        clearAllSelectedUDFData,
+        clearSelectedSelectedUDFData,
+        getUDFListApi,
+        getSelectedUDFFieldDataApi
     } from "../services";
 
 export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-number', async (assetNumber, {getState}) => {
@@ -51,18 +57,27 @@ export const udfFieldLookup=createAsyncThunk('scanner/udffield',async(obj, {getS
 })
 
 export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async () => {
-    return await getUDFListAndConditionCodeByDataCategory();
+    const response =  await getUDFListApi();
+    const storeData = await getSelectedUDFData();
+    const obj ={
+        ...response,
+        selectedUDFs: storeData
+    }
+    return obj
 })
 
-export const udfSelectedAction = createAsyncThunk('setup/udfselected', async (selectedudf) => {
-    return selectedudf;
+export const udfSelectedAction = createAsyncThunk('setup/udfselected', async (data) => {
+   await addSelectedUDFData(data)
+    return data;
 })
 
 export const removeSelectedUDFAction = createAsyncThunk('setup/removeudfselected', async (selectedudf) => {
+    await clearSelectedSelectedUDFData(selectedudf)
     return selectedudf;
 })
 
 export const clearAllUDFSelected = createAsyncThunk('setup/clearalludfs', async () => {
+    await clearAllSelectedUDFData()
     return;
 })
 
@@ -134,3 +149,7 @@ function getSelctedUdfValues(selectedUDFs, responseUdf){
     });
     return obj;
 }
+
+export const getSelectedUDFFieldData=createAsyncThunk('selected/udf/datafiled/values',async(label)=>{
+    return await getSelectedUDFFieldDataApi(label)
+})

@@ -26,7 +26,6 @@ export const Data = (props) => {
 
     const { 
             location, 
-            errorMsg, 
             assetNumber, 
             defaultValues, 
             selectedConditionCode,
@@ -39,7 +38,7 @@ export const Data = (props) => {
 
     const dispatch = useDispatch();
     const listitems = conditionCodeList && conditionCodeList.length>0 ? 
-                        conditionCodeList.map((i)=>({key: i.value, label: i.label, value: i.value})) 
+                        conditionCodeList.map((i)=>({key: i.key, label: i.label, value: i.value})) 
                         : [];
 
     useEffect(() => {
