@@ -3,9 +3,11 @@ import { loginUser, logoutUser } from "../actions";
 import { retrieveTokenFromStorage } from "../services";
 
 
-  const tokenStatus = retrieveTokenFromStorage()
+const tokenStatus = retrieveTokenFromStorage()
     .then((response)=>!!(response && response[0] && response[0][0] == 'ACCESS_TOKEN_KEY'))
-    .catch((e)=>e)
+    .catch((e)=>e);
+
+   
     
 export const login=createSlice({
     name: 'login',
@@ -15,21 +17,19 @@ export const login=createSlice({
         [loginUser.pending]:(state)=>{
             state.loading = true
         },
-        [loginUser.fulfilled]:(state,actions)=>{
+        [loginUser.fulfilled]:(state,{payload})=>{
             state.loading = false,
-            state.entity = actions.payload,
-            state.isLogin = !!(actions.payload && actions.payload.access_token)
+            state.entity = payload,
+            state.isLogin = !!(payload && payload.loggInUser && payload.token)
         },
         [loginUser.rejected]:(state,error)=>{
             state.loading = false
         },
-
         [logoutUser.pending]:(state)=>{
             state.loading = true,
             state.isLogin=false
         },
-        [logoutUser.fulfilled]:(state, {payload})=>{
-            console.log("===#data==",payload)
+        [logoutUser.fulfilled]:(state, {payload})=>{                 
             if(payload){
                 state.loading = false,
                 state.entity =undefined,

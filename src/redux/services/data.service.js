@@ -76,6 +76,20 @@ export const getUDFSuggestionsAPI = async(text, fieldType) => {
     })
 }
 
+
+export const getSelectedUDFFieldDataApi=async(label)=>{
+    return axios({
+        method: 'GET',
+        url: `UDFData/${label}`,
+        baseURL: API_BASE_PATH,
+       
+        headers: await headers()
+    }).then((response) => {
+        let { data } = response;
+        return data;
+    }).catch(({response})=>response)
+}
+
 const transformLocationList = (data) => {
     let locations = data.map((item) => (
         {
@@ -85,6 +99,7 @@ const transformLocationList = (data) => {
     return { searchResultList: locations };
 }
 
+
 const transformUDFSuggestionList = (data) => {
     let suggestions = data.map((item) => (
         {
@@ -93,3 +108,5 @@ const transformUDFSuggestionList = (data) => {
     ));
     return { searchResultList: suggestions };
 }
+
+

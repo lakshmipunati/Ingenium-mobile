@@ -7,14 +7,14 @@ import { Login, SearchItems } from "../screens"
 import BottomTabNavigator from './BottomTabNavigator';
 import { useSelector } from 'react-redux';
 import { PageLoader } from '../components';
-  
-  const Tab = createBottomTabNavigator();
-  
-  export function Navigation(props) {
+
+const Tab = createBottomTabNavigator();
+
+export function Navigation(props) {
     const [isLogin, setIsLogin] = useState(false);
     const [loader, setLoader] = useState(true);
     const state = useSelector((state)=>state.login);
-
+   
     useEffect(()=>{
       setLoader(true)
       tokenService();
@@ -25,7 +25,6 @@ import { PageLoader } from '../components';
       setIsLogin(d ? true : false);
       setLoader(state.loading)
     }
-
     if(loader){
       return (  
           <PageLoader loading={true}/>
@@ -36,9 +35,9 @@ import { PageLoader } from '../components';
         {isLogin && !loader ? <RootNavigator {...props}/> : <LoginNavigator /> }
       </NavigationContainer>
     );
-  }
- 
-  const Stack = createStackNavigator();
+}
+
+const Stack = createStackNavigator();
  
 function RootNavigator(props) {
   return (

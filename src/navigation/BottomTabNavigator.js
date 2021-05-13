@@ -26,7 +26,7 @@ export default function BottomTabNavigator(props) {
   }
   return (
     <BottomTab.Navigator
-      initialRouteName="DATA"
+      initialRouteName="SETUP"
       tabBarOptions={tabBarOptions}
     >
       <BottomTab.Screen

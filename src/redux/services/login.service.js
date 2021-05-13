@@ -12,20 +12,19 @@ export const loginAPI = ({companyID, userName, password}) => {
         method: 'post',
         url: LOGIN_API,
         baseURL: API_BASE_PATH,
-        data: qs.stringify({
-            Username: userName,
-            Password: password,
-            CompanyCode: companyID,
-            grant_type: 'password'
-        }),
+        data:{
+            emailid: userName,
+            userpassword: password
+        },
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json; charset=utf-8',
+            'CompanyAssignedCode' : companyID,
         }
     })
         .then((response) => {
             let { data } = response;      
-            saveTokenToStorage({ token: data['access_token'],companyCode:companyID });
-            setAxiosGlobalConfig({ token: data['access_token'],companyCode:companyID });
+            saveTokenToStorage({ token: data['token'],companyCode:companyID, emailid: data.loggInUser.emailId });
+            setAxiosGlobalConfig({  token: data['token'],companyCode:companyID, emailid: data.loggInUser.emailId });
             return data;
         }).catch(({response})=>response)
 

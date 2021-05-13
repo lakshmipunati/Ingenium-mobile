@@ -1,4 +1,5 @@
-import { ACCESS_TOKEN_KEY, COMPANY_CODE_KEY } from "../../config";
+
+import { ACCESS_TOKEN_KEY, COMPANY_CODE_KEY, USER_EMAIL_ID } from "../../config";
 import axios from "axios";
 import { AsyncStorage } from "react-native";
 
@@ -9,7 +10,7 @@ export const setAxiosGlobalConfig = ({token,companyCode}) => {
     axios.defaults.headers.common['CompanyCode'] = companyCode;
 }
 
-export const saveTokenToStorage = ({token,companyCode}) => {
+export const saveTokenToStorage = ({token,companyCode, emailid}) => {
     return new Promise((resolve, reject) => {
         AsyncStorage.setItem(
             ACCESS_TOKEN_KEY,
@@ -23,6 +24,12 @@ export const saveTokenToStorage = ({token,companyCode}) => {
                     if (err) reject(err);
                     resolve();
             });
+            AsyncStorage.setItem(
+                USER_EMAIL_ID,
+                emailid, (err) => {
+                    if (err) reject(err);
+                    resolve();
+            });
     })
 }
 
@@ -30,7 +37,9 @@ export const retrieveTokenFromStorage = () => {
     return new Promise((resolve, reject) => {
         AsyncStorage.multiGet([
             ACCESS_TOKEN_KEY,
-            COMPANY_CODE_KEY], (err, result) => {
+            COMPANY_CODE_KEY,
+            USER_EMAIL_ID
+        ], (err, result) => {
             if (err || result[0][1] == null) {
                 reject();
             }
@@ -42,6 +51,7 @@ export const retrieveTokenFromStorage = () => {
 export const removeAccessTokenFromStorage = () => {
     AsyncStorage.removeItem(ACCESS_TOKEN_KEY);
     AsyncStorage.removeItem(COMPANY_CODE_KEY);
+    AsyncStorage.removeItem(USER_EMAIL_ID);    
     return undefined
 }
 
@@ -58,9 +68,8 @@ export const addSelectedUDFData=async(data)=>{
     try {
         const result = [];
         const token = await retrieveTokenFromStorage();
-        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[1][1]}`);
+        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[2][1]}-${token[1][1]}`);
         if(getStore===null){
-            
             result.push(data)
         }else{
             const array = JSON.parse(getStore)
@@ -70,7 +79,7 @@ export const addSelectedUDFData=async(data)=>{
                 result.push(data)
             }
         }
-        await AsyncStorage.setItem(`SELECTED-UDF-${token[1][1]}`, JSON.stringify(result));
+        await AsyncStorage.setItem(`SELECTED-UDF-${token[2][1]}-${token[1][1]}`, JSON.stringify(result));
         return result
     } catch (error) {
         console.log(error)
@@ -80,7 +89,7 @@ export const addSelectedUDFData=async(data)=>{
 
 export const getSelectedUDFData=async()=>{
         const token = await retrieveTokenFromStorage();
-        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[1][1]}`);
+        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[2][1]}-${token[1][1]}`);
         if(getStore===null){
             return []
         }
@@ -90,13 +99,13 @@ export const getSelectedUDFData=async()=>{
 export const clearSelectedSelectedUDFData=async(data)=>{
     try {
         const token = await retrieveTokenFromStorage();
-        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[1][1]}`);
+        const getStore = await AsyncStorage.getItem(`SELECTED-UDF-${token[2][1]}-${token[1][1]}`);
         if(getStore===null){
             return [];
         }else{
             const arr = JSON.parse(getStore);
             const list = arr.filter((i)=>i.label!==data.label);
-            await AsyncStorage.setItem(`SELECTED-UDF-${token[1][1]}`, JSON.stringify(list));
+            await AsyncStorage.setItem(`SELECTED-UDF-${token[2][1]}-${token[1][1]}`, JSON.stringify(list));
             return list;
         }
     } catch (error) {
@@ -107,7 +116,7 @@ export const clearSelectedSelectedUDFData=async(data)=>{
 export const clearAllSelectedUDFData=async()=>{
     try {
         const token = await retrieveTokenFromStorage();
-        return await AsyncStorage.removeItem(`SELECTED-UDF-${token[1][1]}`);
+        return await AsyncStorage.removeItem(`SELECTED-UDF-${token[2][1]}-${token[1][1]}`);
     } catch (error) {
         console.log("Store clear all Error : ",error)
     }   

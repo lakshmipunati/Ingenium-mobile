@@ -2,13 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { showAlert } from "../../components";
 import { 
         assetNumberLookupAPI, 
-        getUDFListAndConditionCodeByDataCategory, 
+        // getUDFListAndConditionCodeByDataCategory, 
         searchLocationAPI,
         getUDFSuggestionsAPI,
         addSelectedUDFData,
         getSelectedUDFData,
         clearAllSelectedUDFData,
-        clearSelectedSelectedUDFData
+        clearSelectedSelectedUDFData,
+        getUDFListApi,
+        getSelectedUDFFieldDataApi
     } from "../services";
 
 export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-number', async (assetNumber, {getState}) => {
@@ -55,7 +57,7 @@ export const udfFieldLookup=createAsyncThunk('scanner/udffield',async(obj, {getS
 })
 
 export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async () => {
-    const response =  await getUDFListAndConditionCodeByDataCategory();
+    const response =  await getUDFListApi();
     const storeData = await getSelectedUDFData();
     const obj ={
         ...response,
@@ -147,3 +149,7 @@ function getSelctedUdfValues(selectedUDFs, responseUdf){
     });
     return obj;
 }
+
+export const getSelectedUDFFieldData=createAsyncThunk('selected/udf/datafiled/values',async(label)=>{
+    return await getSelectedUDFFieldDataApi(label)
+})
