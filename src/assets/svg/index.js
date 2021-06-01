@@ -1,6 +1,6 @@
 import React from "react";
 import { SvgXml } from "react-native-svg";
-import {user, contact, lock, hideEye, visibleEye, logout, backArrow, calender} from "./svg"
+import {user, contact, lock, hideEye, visibleEye, logout, backArrow, calender, close, downArrow} from "./svg"
 
 export const USerIcon=(props)=><SvgXml xml={user} height={props.height} width={props.width} fill={props.fill}/>;
 
@@ -16,5 +16,8 @@ export const LogoutIcon=(props)=><SvgXml xml={logout} height={props.height} widt
 
 export const BackArrowIcon=(props)=><SvgXml xml={backArrow} height={props.height} width={props.width} fill={props.fill}/>
 
+export const CloseIcon=(props)=><SvgXml xml={close} height={props.height} width={props.width} fill={props.fill}/>
+
+export const DownArrowIcon=(props)=><SvgXml xml={downArrow} height={props.height} width={props.width} fill={props.fill}/>
 
 export const CalenderIcon=(props)=><SvgXml xml={calender} height={props.height} width={props.width} fill={props.fill}/>

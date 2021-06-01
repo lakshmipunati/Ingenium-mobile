@@ -1,31 +1,30 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Text, Image, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 import { LabelValue } from '../../components/label-value';
 
+const {width, height} = Dimensions.get('screen')
 export const Description = (props) => {
     const reducerData = useSelector((state)=>state.dataTab);
 
-    const {description, manufacturer, productImageURI, productNumber, userCode} = reducerData.entity.descriptionCatalogData;
+    const {Description, ProductCategory,ManufacturerName, ImageFilePath, ProductNumber, DataCategory} = reducerData.entity.descriptionCatalogData;
     const {descriptionID}=reducerData.entity;
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView>
+            {/* <KeyboardAvoidingView>
                 <ScrollView>
                     <LabelValue label={"Description ID"} value={descriptionID ? descriptionID: null} />
-                    <LabelValue label={"Product Category"} value={manufacturer ? manufacturer : null} />
-                    <LabelValue label={"Description"} value={description ? description : null} />
-                    <LabelValue label={"Manufacturer"} value={manufacturer ? manufacturer : null} />
-                    <LabelValue label={"Product Number"} value={productNumber ? productNumber : null} />
-                    <LabelValue label={"User Code"} value={userCode ? userCode : null} />
+                    <LabelValue label={"Product Category"} value={ProductCategory ? ProductCategory : null} />
+                    <LabelValue label={"Description"} value={Description ? Description : null} />
+                    <LabelValue label={"Manufacturer"} value={ManufacturerName ? ManufacturerName : null} />
+                    <LabelValue label={"Product Number"} value={ProductNumber ? ProductNumber : null} />
+                    <LabelValue label={"Data Category"} value={DataCategory ? DataCategory : null} />
                     <Text style={styles.product_label}>Product Image :</Text>
-                    {/* <ProductImage
-                        imageStyle={styles.productImage}
-                        resizeMode="contain"
-                        imageSource={{ uri: productImageURI }}
-                    /> */}
+                    <Image 
+                        style={{width: width, height: height-600}} source={{uri: `https://assetingenium.blob.core.windows.net/demo/description-catalog/${ImageFilePath}`}}
+                    />
                 </ScrollView>
-            </KeyboardAvoidingView>
+            </KeyboardAvoidingView> */}
         </View>
     )
 }

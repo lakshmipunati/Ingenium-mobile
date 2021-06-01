@@ -13,16 +13,19 @@ const BottomTab = createBottomTabNavigator();
 export default function BottomTabNavigator(props) {
   const tabBarOptions = {
     style: {
-      paddingBottom: 18,
+      // paddingBottom: 18,
       backgroundColor: '#059DCC',
     },
     labelStyle: {
+      paddingBottom: 15,
       fontSize: 14,
       fontWeight: 'bold',
     },
     activeTintColor: '#fff',
     inactiveTintColor: '#D4D1CF',
     upperCaseLabel: false,
+    activeBackgroundColor: '#0CBED1'
+    
   }
   return (
     <BottomTab.Navigator
@@ -32,6 +35,8 @@ export default function BottomTabNavigator(props) {
       <BottomTab.Screen
         name="DATA"
         component={TabDataNavigator}
+      
+        tabBarOptions={{style: {padding: 20}}}
       />
       <BottomTab.Screen
         name="DESCRIPTION"

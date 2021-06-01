@@ -36,7 +36,7 @@ export function SharedDateTimePicker(props){
                     <Text style={styles.dateText}>{date ? getDate(date) : null}</Text>
                 </View>
                 <View style={styles.icon}>
-                   <CalenderIcon width="30px" height="40px" fill="black" />
+                   <CalenderIcon width="25px" height="35px" fill="#059DCC" />
                 </View>
             </TouchableOpacity>
         
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     },
     dateContainer: {
         borderWidth: 1,
-        padding: 10,
+        padding: 8,
         borderRadius: 8,
         borderColor: '#ccc',
         flex: 1
@@ -79,11 +79,12 @@ const styles = StyleSheet.create({
     icon: {
         borderWidth: 1,
         borderColor: "#ccc",
-        width: 40,
-        height: 45,
+        width: 35,
+        height: 40,
         marginTop: 0,
         borderRadius: 10,
-        paddingLeft: 3
+        paddingLeft: 4,
+        marginLeft: 5,
         // marginLeft: -5
         // marginLeft: 5
     }

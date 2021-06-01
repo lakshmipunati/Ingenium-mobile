@@ -40,21 +40,12 @@ export const Setup = (props) => {
   }
 
   const saveUDF = () => {
-  
     if (selectedUDFs.length > 0 && !selectedUDFs.find((item) => item.key == udfSelected.key)) {
-      // console.log("===#11data===",udfSelected)
-      if(udfSelected!==""){
-        dispatch(udfSelectedAction(udfSelected))
-      }
-   
-    } 
-    else if (selectedUDFs.length == 0 && udfSelected == "") {
-      udfSelected = UDFLookupListItems[0];
-      // console.log("===#22data===",udfSelected)
+      dispatch(udfSelectedAction(udfSelected))
+    } else if (selectedUDFs.length == 0 && udfSelected == "") {
+      udfSelected = UDFLookupListItems[0]
       dispatch(udfSelectedAction(udfSelected));
-    } 
-    else if (selectedUDFs.length == 0) {
-      // console.log("===#33data===",udfSelected)
+    } else if (selectedUDFs.length == 0) {
       dispatch(udfSelectedAction(udfSelected));
     }
   }
@@ -70,11 +61,10 @@ export const Setup = (props) => {
       return ""
     }
   }
-  // console.log("==#rrrr===",selectedUDFs)
   return (
     <PageLoader loading={reducerData.loading}>
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+      <ScrollView>
         <View >
           <Text style={styles.textClr}>User Defined Field</Text>
           <ModelSelector 
@@ -93,36 +83,33 @@ export const Setup = (props) => {
           <View style={styles.udfCoontainer}>
             {selectedUDFs &&
               selectedUDFs.map((field, index) => {
-              
-                return (                
+                return (
                   <View key={index} style={styles.fieldContainer}>
-                    <Text style={styles.listElement} key={index}>
+                    {/* <Text style={styles.listElement} key={index}>
                       {field.label}
-                    </Text>
+                    </Text> */}
                     {field.fieldType == "TEXT" ? 
                     udfTypes[field.label].length>0 ? 
                     (
+                      <View style={{flex: 1, marginTop: -10}}>
+                        <Text style={styles.label}>{field.label}</Text>
                       <ModelSelector
                         listItems={udfTypes[field.label]}
                         onChange={({label})=>onChangeText(field.label,label, true)}
-                        initValue={field.value ? field.value : ''}
-                        selectTextStyle={{fontSize: 13, color: 'black'}}
+                        initValue=""
+                        selectTextStyle={{fontSize: 13}}
                       />
+                      </View>
                     ) :  
                     (
-                      <View style={{flex: 1}}>
+                      <View style={{ marginTop: -15}}>
                       <SharedTextInput
                           keyboardType="ascii-capable"
-                          label=""
+                          label={field.label}
                           name={field.label}
                           placeholder=""
-                          style={{ 
-                            minWidth:width - 200, 
-                            height: 40, 
-                            marginTop: -20,
-                            width: '100%',
-                          }}
-                          value={field.value ? field.value.toString() : ""}
+                          style={{ minWidth:width - 90, height: 40}}
+                          value={field.value ? field.value : ""}
                           onChangeText={(name, value) => onChangeText(name, value, true)}
                       />
                       </View>
@@ -130,68 +117,58 @@ export const Setup = (props) => {
                     : null}
 
                     {field.fieldType == "CURRENCY" || field.fieldType== "NUMERIC" ? 
-                     <View style={{flex: 1 ,position: 'relative'}}>
-                       {field.fieldType == "CURRENCY" ? 
-                        <Text style={styles.currencyText}>$</Text>
-                       : null}
-                      
+                     <View style={{ marginTop: -15}}>
                       <SharedTextInput
                           keyboardType="number-pad"
-                          label=""
+                          label={field.label}
                           name={field.label}
                           placeholder=""
-                          style={{
-                              width: '100%',
-                              height: 40, 
-                              marginTop: -20, 
-                              paddingLeft: field.fieldType == "CURRENCY" ? 15 : 10
-                            }}
-                          value={field.value ? field.value.toString() : ""}
+                          style={{ minWidth:width - 90, height: 40}}
+                          value={field.value ? field.value : ""}
                           onChangeText={(name, value) => onChangeText(name, value, true)}
-                          maxLength={field.fieldType == "CURRENCY" ? 18 : 500}
                       />
                       </View>
                     : null }
                    
                    {field.fieldType==="DATE" ? 
-                   <View style={{flex: 1, marginTop: -30}}>
+                    <View style={{ marginTop: -15}}>
                       <SharedDateTimePicker
-                          label=""
+                          label={field.label}
                           name={field.label}
-                          value={field.value ? field.value.toString() : ""}
+                          value={field.value ? field.value : ""}
                           handleChangeDate={(name, value) => onChangeText(name, value, true)}
                       />
                       </View>
                   : null}  
 
                     {field.fieldType==="TRUE/FALSE" ? 
-                            <View style={{flexDirection: 'row', flex: 1,marginTop: 10}}>
+                    <View style={{ flex: 1, marginTop: -15}}>
+                       <Text style={styles.label}>{field.label}</Text>
+                            <View style={{flexDirection: 'row'}}>
                                 <View>
                                     <RadioBtn 
-                                      isSelected={field.value==true ? true : false} 
+                                      isSelected={field.value=='True' ? true : false} 
                                       label="True" 
                                       name={field.label}
-                                      value={true}
                                       handleClickRadio={(name, value)=>onChangeText(name, value, true)}
                                     />
                                 </View>
-                                <View style={{marginLeft: 30}}>
+                                <View style={{marginLeft: width-250}}>
                                     <RadioBtn 
-                                      isSelected={field.value===false ? true : false} 
+                                      isSelected={field.value==="False" ? true : false} 
                                       label="False" 
                                       name={field.label}
-                                      value={false}
                                       handleClickRadio={(name, value)=>onChangeText(name, value, true)}
                                     />
                                 </View>                                                            
                               </View>
-                        
+                        </View>
                       : null} 
-                    <TouchableOpacity onPress={() => deleteUDF(field)} style={{marginLeft: 10, textAlign: 'center'}}>
-                      <CloseIcon height="40px" width="25px" fill="#059DCC" />
+                    <TouchableOpacity onPress={() => deleteUDF(field)} style={{marginLeft: 20, textAlign: 'center'}}>
+                      <CloseIcon height="45px" width="15px" fill="black" />
                     </TouchableOpacity>
                   </View>
-                )
+                );
               })}
           </View>
         </View>
@@ -248,16 +225,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginLeft: 4
   },
+  label:{
+    color: '#A9A9A9',
+    fontSize: 16,
+  },
   listElement: {
     padding: 10,
     flex: 0.5,
     borderRadius: 20
-  },
-  currencyText: {
-    position: 'absolute', 
-    top: 10, 
-    left: 2, 
-    fontSize: 16, 
-    fontWeight: 'bold'
   }
 })

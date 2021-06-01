@@ -1,43 +1,26 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Text } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { LabelValue } from '../../components/label-value';
 
 export const UDFData = (props) => {
-    const reducerData = useSelector((state) => state.dataTab);
-    const { selectedUDFs } = reducerData.entity;
 
-    const dataRendering = () => {
-        if (selectedUDFs.length > 0) {
-            return (
-                <View>
-                    {selectedUDFs &&
-                        selectedUDFs.map((field, index) => {
-                            return (
-                                <ScrollView>
-                                    <LabelValue label={field.label} value={null} />
-                                </ScrollView>
-                            )
-                        })
-                    }
-
-                </View>
-            )
-        } else {
-            return (
-                <View>
-                    <Text style={{ textAlign: 'center', fontSize: 16 }}> UDF data not Available</Text>
-                </View>
-            )
-        }
-    }
-
+    const reducerData = useSelector((state)=>state.dataTab);
+    const {selectedUDFs} = reducerData.entity;
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView>
-                {dataRendering()}
-            </KeyboardAvoidingView>
-        </View>
+        {/* <KeyboardAvoidingView>
+            <ScrollView>
+                {selectedUDFs && selectedUDFs.length>0 ? (
+                    selectedUDFs.map((i, k)=>(
+                        i.value ? (
+                            <LabelValue key={k} label={i.label} value={i.value} />
+                        ) : null
+                    ))
+                ) : null}           
+            </ScrollView>
+        </KeyboardAvoidingView> */}
+    </View>
     )
 }
 

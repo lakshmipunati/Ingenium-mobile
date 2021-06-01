@@ -45,8 +45,8 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
         width: 45,
-        height: 45,
-        marginTop: 0,
+        height: 42,
+        marginTop: -10,
         borderRadius: 10,
         marginLeft: -5
     },

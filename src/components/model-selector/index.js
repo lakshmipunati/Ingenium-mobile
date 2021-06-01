@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import ModalPicker from 'react-native-modal-selector';
+import { DownArrowIcon } from "../../assets";
 
 
 export function ModelSelector(props) {
@@ -8,14 +9,19 @@ export function ModelSelector(props) {
         <View style={styles.container}>
             <View style={styles.pickerContainer}>
                 <ModalPicker
-                    style={props.isConditionCodeEnable ? styles.pickerStyleDanger : styles.pickerStyle}
-                    selectStyle={{ height: 45 }}
+                    style={styles.pickerStyle}
+                    selectStyle={{ height: 40, borderColor: props.isConditionCodeEnable ? 'red' : '#ccc', borderWidth: 2, paddingRight: 10 }}
                     data={props.listItems}
                     accessible={true}
+                    // selectTextStyle={props.selectTextStyle ? {fontSize: 10} : {fontSize: 10}}
+                    initValueTextStyle={props.selectTextStyle ? props.selectTextStyle : {color: 'black'}}
                     initValue={props.initValue ? props.initValue : ""}
-                    // initValue={props.initValue ? props.initValue : (props.listItems.length!=0 && props.listItems[0].label)}
                     onChange={(option) => { props.onChange(option) }}
+                    cancelText="Cancel"
                 />
+                {/* <View style={styles.dArrowContainer}>
+                    <DownArrowIcon height="20px" width='14px' fill="#ccc" />
+                </View> */}
             </View>
         </View>
     )
@@ -27,20 +33,21 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     pickerContainer: {
-        height: 45
+        height: 45,
+        position: 'relative'
     },
     pickerStyle: {
-        borderWidth: 1,
+        // borderWidth: 1,
         borderRadius: 10,
-        borderColor: '#ccc',
+        // borderColor: '#ccc',
         flex: 1,
-        height: 45
+        height: 10,
     },
-    pickerStyleDanger: {
-        borderWidth: 2,
-        borderRadius: 10,
-        borderColor: 'red',
-        flex: 1,
-        height: 45,
-    }
+    dArrowContainer: {
+        position: 'absolute',
+        right: 6,
+        top:10,
+        bottom: 0
+    },
+  
 });

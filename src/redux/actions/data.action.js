@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { showAlert } from "../../components";
 import { 
         assetNumberLookupAPI, 
-        // getUDFListAndConditionCodeByDataCategory, 
         searchLocationAPI,
         getUDFSuggestionsAPI,
         addSelectedUDFData,
@@ -10,23 +9,27 @@ import {
         clearAllSelectedUDFData,
         clearSelectedSelectedUDFData,
         getUDFListApi,
-        getSelectedUDFFieldDataApi
+        getSelectedUDFFieldDataApi,
+        getConditionCodeApi
     } from "../services";
 
 export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-number', async (assetNumber, {getState}) => {
     const response = await assetNumberLookupAPI(assetNumber);
+
     if(response && response.data){
         showAlert(response.data)
+    }
+   if(response.config && response.config.data==undefined){
+        showAlert('Asset number is not matching!')
     }
     const {selectedUDFs} = getState().dataTab.entity;
     if(selectedUDFs && selectedUDFs.length>0){
         let obj = {
             ...response,
-            selectedUDFs: getSelctedUdfValues(selectedUDFs, response.UDFList)
+            selectedUDFs: getSelctedUdfValues(selectedUDFs, response)
         };
         return obj;
     } 
-
     return response
 })
 
@@ -35,33 +38,47 @@ export const udfFieldLookup=createAsyncThunk('scanner/udffield',async(obj, {getS
     const {name, number} = obj;
     const {selectedUDFs} = getState().dataTab.entity;
     const response = await assetNumberLookupAPI(number);
+    
     if(response && response.data){
         showAlert(response.data)
     }
-    const {UDFList} = response;
+    else if(!response[name]){
+        showAlert(`${name} not found!`)
+    }
     const selectedudfList = [];
     selectedudfList.push(...selectedUDFs);
-    if(UDFList && UDFList.length>0 && selectedUDFs && selectedUDFs.length>0){
+    if(response && response[name] && selectedUDFs && selectedUDFs.length>0){
         const selectedUdfIndex=selectedUDFs.findIndex((i)=>i.label===name);
-        const udfListIndex=UDFList.findIndex((i)=>i.UDFFieldName===name);
-        if(udfListIndex>-1 && selectedUdfIndex>-1){
+        if(selectedUdfIndex>-1){
             selectedudfList[selectedUdfIndex]={
                 ... selectedudfList[selectedUdfIndex],
-                value: UDFList[udfListIndex].UDFFieldData
+                value: response[name]
             }
         }
         return selectedudfList;
+       
     }
-
     return selectedUDFs;
 })
 
-export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async () => {
+export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async (data,{dispatch}) => {
     const response =  await getUDFListApi();
+    const ccCode = await getConditionCodeApi();
+    let udfTypes = {};
+    const { userDefinedFields } = response;
+    for(var i=0;i<userDefinedFields.length;i++){
+        const {payload} = await  dispatch(getSelectedUDFFieldData(userDefinedFields[i].label));
+            udfTypes={
+                ...udfTypes,
+                [userDefinedFields[i].label] : payload.map((item, index)=>({ key: index, label: item.fieldData, id: item.id }))
+            }
+    }
     const storeData = await getSelectedUDFData();
     const obj ={
         ...response,
-        selectedUDFs: storeData
+        selectedUDFs: storeData,
+        udfTypes,
+        conditionCode: ccCode.conditionCode
     }
     return obj
 })
@@ -136,15 +153,23 @@ export const defaltValueSetup = createAsyncThunk('data/default-type', async (obj
 function getSelctedUdfValues(selectedUDFs, responseUdf){
     const obj =[];
     selectedUDFs.map((i)=>{
-        const filterData = responseUdf.filter((k)=>k.UDFFieldName===i.label);
-        if(filterData[0]){
+        if(responseUdf && responseUdf[i.label]){
             obj.push({
                 ...i,
-                value: filterData[0].UDFFieldData
+                value: responseUdf[i.label]
             })
         }else{
             obj.push({...i})
         }
+        // const filterData = responseUdf.filter((k)=>k.UDFFieldName===i.label);
+        // if(filterData[0]){
+        //     obj.push({
+        //         ...i,
+        //         value: filterData[0].UDFFieldData
+        //     })
+        // }else{
+        //     obj.push({...i})
+        // }
         
     });
     return obj;

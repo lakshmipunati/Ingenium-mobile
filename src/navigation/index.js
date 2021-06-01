@@ -5,8 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Login, SearchItems } from "../screens"
 import BottomTabNavigator from './BottomTabNavigator';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PageLoader } from '../components';
+import { getUDFDataAction } from '../redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,9 +15,10 @@ export function Navigation(props) {
     const [isLogin, setIsLogin] = useState(false);
     const [loader, setLoader] = useState(true);
     const state = useSelector((state)=>state.login);
-   
+   const dispatch = useDispatch()
     useEffect(()=>{
-      setLoader(true)
+      setLoader(true);
+      dispatch(getUDFDataAction());
       tokenService();
     },[isLogin, state]);
 

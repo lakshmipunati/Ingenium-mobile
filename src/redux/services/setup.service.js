@@ -1,10 +1,11 @@
 import axios from "axios";
 import {
     API_BASE_PATH,
-    GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
+    // GETUDFLISTANDCONDITIONCODEBYDATACATEGORY,
 } from '../../config';
 import { headers } from "./token.service";
 
+//
 export const getUDFListApi = async() => {
     //debugger
     return axios({
@@ -19,8 +20,8 @@ export const getUDFListApi = async() => {
     })
         .then((response) => {
             let { data } = response;
-            data.UDFList = data.filter(function (e) {
-                return e.FieldType != "FILE LINK";
+            data = data.filter(function (e) {
+                return e.fieldType !== "FILE LINK";
             });
             let transformedData = transformUDFList(data);
             return transformedData;
@@ -29,12 +30,6 @@ export const getUDFListApi = async() => {
 };
 
 const transformUDFList = (UDFList) => {
-    // let { UDFList, ConditionCodes } = data;
-    // let conditionCode = ConditionCodes.map((item) => ({
-    //     label: item.Name,
-    //     value: item.ID,
-    // }));
-  
     let userDefinedFields = UDFList.map((item, index) => ({
         key: index,
         label: item.userDefinedField,

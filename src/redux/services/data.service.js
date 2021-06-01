@@ -1,46 +1,55 @@
 import axios from "axios";
-import { API_BASE_PATH, ASSETNUMBER_LOOKUP, SEARCH_LOCATION, UDF_SUGGESTION } from "../../config";
+import { API_BASE_PATH, ASSETNUMBER_LOOKUP, CONDITION_CODE, SEARCH_LOCATION, UDF_SUGGESTION } from "../../config";
 import {headers} from "./token.service"
-
-
 
 export const assetNumberLookupAPI = async(assetNumber) => {
    
     return axios({
         method: 'GET',
-        url: ASSETNUMBER_LOOKUP,
+        url: ASSETNUMBER_LOOKUP+assetNumber,
         baseURL: API_BASE_PATH,
-        params: {
-            assetNumber
-        },
         headers: await headers()
     }).then((response) => {
         let { data } = response;
-        return transformAssetNumberLookupResponse(data);
+        if(data!==""){
+            return transformAssetNumberLookupResponse(data[0]);
+        }else{
+            return response
+        }
+      
     }).catch(({response})=>response)
 }
 
 const transformAssetNumberLookupResponse = (response) => {
+    let assetNumber = response.AssetNumber;
     let descriptionID = response.DescriptionID;
     let location = response.Location;
     let selectedConditionCode = response.ConditionCode
     let assetID = response.ID;
-    let UDFList = response.UDFList;
-    let descriptionCatalogData = {
-        description: response.ProductDescription,
-        manufacturer: response.Manufacturer,
-        productNumber: response.ProductNumber,
-        userCode: response.UserCode,
-        productImageURI: response.ProductImage,
-    }
+    let unitCost = response.UnitCost;
+    let productCategory = response.DescriptionCatalog[0].ProductCategory
+    // let UDFList = response.UDFList;
+    let UDFList = [];
+    let descriptionCatalogData = response.DescriptionCatalog[0]
+    // let descriptionCatalogData = {
+    //     description: response.ProductDescription,
+    //     manufacturer: response.Manufacturer,
+    //     productNumber: response.ProductNumber,
+    //     userCode: response.UserCode,
+    //     productImageURI: response.ProductImage,
+    // }
 
     return {
+        assetNumber,
         assetID,
         descriptionID,
         location,
         selectedConditionCode,
         descriptionCatalogData,
-        UDFList
+        productCategory,
+        unitCost,
+        UDFList,
+        ...response
     };
 }
 
@@ -48,6 +57,7 @@ export const searchLocationAPI=async(text)=>{
     return axios({
         method: 'GET',
         url: SEARCH_LOCATION,
+        // url: '/locations',
         baseURL: API_BASE_PATH,
         params: {
             text
@@ -56,9 +66,10 @@ export const searchLocationAPI=async(text)=>{
     }).then((response) => {
         let { data } = response;
         return transformLocationList(data);
-    }).catch(({response})=>response)
+    }).catch(({response})=>{
+        return response;
+    })
 }
-
 
 export const getUDFSuggestionsAPI = async(text, fieldType) => {
     return axios({
@@ -76,7 +87,6 @@ export const getUDFSuggestionsAPI = async(text, fieldType) => {
     })
 }
 
-
 export const getSelectedUDFFieldDataApi=async(label)=>{
     return axios({
         method: 'GET',
@@ -90,10 +100,33 @@ export const getSelectedUDFFieldDataApi=async(label)=>{
     }).catch(({response})=>response)
 }
 
+export const getConditionCodeApi=async()=>{
+    return axios({
+        method: 'GET',
+        url: CONDITION_CODE,
+        baseURL: API_BASE_PATH,
+        headers: await headers()
+    }).then((response) => {
+        let { data } = response;
+ 
+        return transformConditionCode(data);
+    }).catch(({response})=>response)
+}
+
+const transformConditionCode = (data) => {
+    let conditionCode=data.map((item,index)=> ({
+            key: index,
+            label: `${item.conditionCode}-${item.conditionDescription}`,
+            value: item.conditionCode
+        })
+    );
+    return {conditionCode};
+};
+
 const transformLocationList = (data) => {
     let locations = data.map((item) => (
         {
-            key: item.Name
+            key: item.location
         }
     ));
     return { searchResultList: locations };
@@ -101,11 +134,9 @@ const transformLocationList = (data) => {
 
 
 const transformUDFSuggestionList = (data) => {
-    let suggestions = data.map((item) => (
-        {
+    let suggestions = data.map((item) => ({
             key: item
-        }
-    ));
+        }));
     return { searchResultList: suggestions };
 }
 

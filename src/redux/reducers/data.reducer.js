@@ -8,11 +8,11 @@ import {
         udfSelectedAction, 
         removeSelectedUDFAction, 
         udfFieldLookup, 
-        clearAllUDFSelected 
+        clearAllUDFSelected, 
     } from "../actions";
 const entity = {
-    unitCost: '0',
-    productCategory: '6100',
+    unitCost: '',
+    productCategory: '',
     assetNumber: '',
     assetID: '',
     descriptionCatalogData: {
@@ -32,7 +32,8 @@ const entity = {
     },
     UDFLookupList: [],
     conditionCodeList: [],
-    selectedUDFs: []
+    selectedUDFs: [],
+    udfTypes: []
 }
 
 export const dataTab = createSlice({
@@ -95,13 +96,13 @@ export const dataTab = createSlice({
                 ...entity,
                 UDFLookupList: state.entity.UDFLookupList,
                 conditionCodeList: state.entity.conditionCodeList,
+                udfTypes: state.entity.udfTypes,
                 selectedUDFs: state.entity.selectedUDFs.map((i)=>({ key: i.key, label: i.label, fieldType: i.fieldType }))
             }
         },
 
-
         [defaltValueSetup.fulfilled]: (state, { payload }) => {
-            const { name, status } = payload
+            const { name, status } = payload;
             state.entity.defaultValues = {
                 ...state.entity.defaultValues,
                 [name]: status
@@ -117,12 +118,18 @@ export const dataTab = createSlice({
             state.loading = true;
             state.errorMsg = undefined;
         },
+
         [getUDFDataAction.fulfilled]: (state, { payload }) => {
-                state.loading = false;
-                state.errorMsg = undefined;
-                state.entity.selectedUDFs = payload.selectedUDFs ? payload.selectedUDFs : [];
-                state.entity.UDFLookupList = payload.userDefinedFields ? payload.userDefinedFields : [];
-                state.entity.conditionCodeList=payload.conditionCode ? payload.conditionCode : []
+            state.loading = false;
+            state.errorMsg = undefined;
+            state.entity.selectedUDFs = payload.selectedUDFs ? payload.selectedUDFs : [];
+            state.entity.UDFLookupList = payload.userDefinedFields ? payload.userDefinedFields : [];
+            state.entity.udfTypes = payload.udfTypes;
+            state.entity.conditionCodeList = payload.conditionCode;
+        },
+
+        [getUDFDataAction.rejected]: (state, error) => {
+            state.loading = false
         },
 
         [udfSelectedAction.fulfilled]: (state, { payload }) => {
@@ -139,15 +146,14 @@ export const dataTab = createSlice({
             state.loading = false;
             let updatedList = state.entity.selectedUDFs.filter((item) => item.key != payload.key);
             state.entity.selectedUDFs = updatedList;
+
         },
 
         [clearAllUDFSelected.fulfilled]: (state, { payload }) => {
             state.entity.selectedUDFs = [];
-        },
-
-        [getUDFDataAction.rejected]: (state, error) => {
-            state.loading = false
         }
+
+      
     }
 }).reducer;
 

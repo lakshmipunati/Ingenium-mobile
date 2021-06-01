@@ -23,6 +23,7 @@ export function SharedTextInput(props) {
                             editable={props.editable ? false: true}
                             style={[styles.sharedInputBox,props.style]}  
                             underlineColorAndroid="rgba(0,0,0,0)"
+                            maxLength={props.maxLength}
                        /> 
                         {props.isSearch ? 
                             <TouchableOpacity style={styles.button} onPress={()=>props.onClickSearch(props.name)}>
@@ -89,7 +90,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderColor: '#B5B3B2',
         fontSize: 16,
-        height:50
+        flex: 1,
+        width: '100%'
     }, 
     sharedInputBox: {
         borderWidth: 1,
