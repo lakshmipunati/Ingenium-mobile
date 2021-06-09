@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Ingenium",
-    "slug": "Ingenium",
+    "name": "Ingeniumapp",
+    "slug": "Ingeniumapp",
     "version": "2.1.1",
     "orientation": "portrait",
     "icon": "./assets/adaptive.png",

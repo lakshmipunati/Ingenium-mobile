@@ -26,7 +26,7 @@ export const PageLoader=(props)=>{
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        position: 'relative'
+        position: 'relative',
       },
       horizontal: {
           position: 'absolute',

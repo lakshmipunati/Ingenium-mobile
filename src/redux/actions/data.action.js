@@ -10,19 +10,27 @@ import {
         clearSelectedSelectedUDFData,
         getUDFListApi,
         getSelectedUDFFieldDataApi,
-        getConditionCodeApi
+        getConditionCodeApi,
+        saveMobileformDataAPI,
+        retrieveTokenFromStorage,
+        getUserPermissionApi
     } from "../services";
 
-export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-number', async (assetNumber, {getState}) => {
-    const response = await assetNumberLookupAPI(assetNumber);
+export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-number', async (assetNumber, {getState, dispatch}) => {
+   const { selectedUDFs } = getState().dataTab.entity;
 
+    const response = await assetNumberLookupAPI(assetNumber);
     if(response && response.data){
         showAlert(response.data)
+        dispatch(clearDataFields());
+        return false
     }
    if(response.config && response.config.data==undefined){
         showAlert('Asset number is not matching!')
+        dispatch(clearDataFields());
+        return false
     }
-    const {selectedUDFs} = getState().dataTab.entity;
+
     if(selectedUDFs && selectedUDFs.length>0){
         let obj = {
             ...response,
@@ -30,7 +38,9 @@ export const lookupByAssetNumberAction = createAsyncThunk('data/lookup/asset-num
         };
         return obj;
     } 
-    return response
+    return {
+        ...response,
+    }
 })
 
 
@@ -63,7 +73,11 @@ export const udfFieldLookup=createAsyncThunk('scanner/udffield',async(obj, {getS
 
 export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async (data,{dispatch}) => {
     const response =  await getUDFListApi();
+
     const ccCode = await getConditionCodeApi();
+
+    const permissions = await getUserPermissionApi();
+
     let udfTypes = {};
     const { userDefinedFields } = response;
     for(var i=0;i<userDefinedFields.length;i++){
@@ -78,7 +92,8 @@ export const getUDFDataAction = createAsyncThunk('setup/lookup/udf', async (data
         ...response,
         selectedUDFs: storeData,
         udfTypes,
-        conditionCode: ccCode.conditionCode
+        conditionCode: ccCode.conditionCode,
+        permissions
     }
     return obj
 })
@@ -177,4 +192,92 @@ function getSelctedUdfValues(selectedUDFs, responseUdf){
 
 export const getSelectedUDFFieldData=createAsyncThunk('selected/udf/datafiled/values',async(label)=>{
     return await getSelectedUDFFieldDataApi(label)
+})
+
+
+export const saveForm = createAsyncThunk('save/form/data', async(data, {dispatch, getState}) => {
+
+    const {entity} = getState().dataTab;
+
+    // let query = {};
+    // let assetDetails = {
+    //     ID: dataTab.assetID,
+    //     AssetNumber: dataTab.assetNumber,
+    //     DescriptionID: dataTab.descriptionID,
+    //     ConditionCode: dataTab.selectedConditionCode,
+    //     Location: dataTab.location,
+    //     CRUDOperation: getCrudOperation(dataTab),
+    //     ProductInventory: false,
+    //     DataCategory: mobileformSetup.selectedDataCategory.label
+    // };
+
+    // let dataCategoryName = mobileformSetup.userConfiguration.selectedDataCategory.label
+
+    // let formValidationErrors = validateMobileformData(assetDetails);
+
+    // if (formValidationErrors.length > 0) {
+    //     showAlert({
+    //         alertMessage: ERR_FORMVALIDATION,
+    //         alertMessageContent: `${formValidationErrors.join('\n')}`
+    //     });
+    //     return false;
+    // }
+
+    // let udfValidationErrors = validateUDF(mobileformSetup.selectedUDFs);
+
+    // if (udfValidationErrors.length > 0) {
+    //     showAlert({
+    //         alertMessage: ERR_UDFVALIDATION,
+    //         alertMessageContent: `Required: \n${udfValidationErrors.join('\n')}`
+    //     });
+    //     return false;
+    // }
+
+    // let udfDetails = formatUDFForAPI(mobileformSetup.selectedUDFs);
+
+    // query['assetDetails'] = JSON.stringify(assetDetails);
+    // query['dataCategoryName'] = dataCategoryName;
+    // query['udfDetails'] = JSON.stringify(udfDetails);
+
+    const response = await saveMobileformDataAPI(entity).catch((e) => {
+            let errorMessage = ''
+            if (typeof (e.response.data) == 'string') {
+                errorMessage = e.response.data;
+            } else {
+                errorMessage = e.response.data.result;
+            }
+            showAlert(errorMessage);
+        })
+    if(response){
+        dispatch(clearDataFields());
+        showAlert(response);
+    }
+    // dispatch({
+    //     type: SHOWLOADER
+    // });
+    // saveMobileformDataAPI(query)
+    //     .then((data) => {
+    //         dispatch(cancelForm());
+    //         showAlert(data);
+    //     })
+    //     .catch((e) => {
+    //         let errorMessage = ''
+    //         if (typeof (e.response.data) == 'string') {
+    //             errorMessage = e.response.data;
+    //         } else {
+    //             errorMessage = e.response.data.result;
+    //         }
+    //         showAlert(errorMessage);
+    //     })
+    //     .finally(() => {
+    //         dispatch({
+    //             type: HIDELOADER
+    //         });
+    //     });
+})
+
+
+export const getCompanyStoragePath=createAsyncThunk('commpany/storage/path',async()=>{
+    const path = await retrieveTokenFromStorage();
+    return path
 })

@@ -28,6 +28,9 @@ const { height } = Dimensions.get('screen');
 export function Login(props){
 
     const init = {
+        // companyID: 'C00121',
+        // userName: 'user1@assetsystems.com',
+        // password: 'Testing1#'
         companyID: '',
         userName: '',
         password: ''

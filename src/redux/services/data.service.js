@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_PATH, ASSETNUMBER_LOOKUP, CONDITION_CODE, SEARCH_LOCATION, UDF_SUGGESTION } from "../../config";
+import { getUserPermissionApi } from "./login.service";
 import {headers} from "./token.service"
 
 export const assetNumberLookupAPI = async(assetNumber) => {
@@ -113,7 +114,8 @@ export const getConditionCodeApi=async()=>{
     }).catch(({response})=>response)
 }
 
-const transformConditionCode = (data) => {
+const transformConditionCode = async(data) => {
+    const userPermission = await getUserPermissionApi();
     let conditionCode=data.map((item,index)=> ({
             key: index,
             label: `${item.conditionCode}-${item.conditionDescription}`,
@@ -138,6 +140,10 @@ const transformUDFSuggestionList = (data) => {
             key: item
         }));
     return { searchResultList: suggestions };
+}
+
+export const saveMobileformDataAPI=(data)=>{
+    return "Saved successfully..."
 }
 
 

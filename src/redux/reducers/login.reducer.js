@@ -20,7 +20,7 @@ export const login=createSlice({
         [loginUser.fulfilled]:(state,{payload})=>{
             state.loading = false,
             state.entity = payload,
-            state.isLogin = !!(payload && payload.loggInUser && payload.token)
+            state.isLogin = !!(payload && payload.jwtAccessToken)
         },
         [loginUser.rejected]:(state,error)=>{
             state.loading = false

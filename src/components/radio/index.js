@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { proportionalSize } from '../../utils';
 
 export const RadioBtn=(props)=>{
  
@@ -51,7 +52,7 @@ const styles=StyleSheet.create({
     label: {
         // fontWeight: 'bold',
         marginLeft: 10,
-        fontSize: 18
+        fontSize: proportionalSize(50)
     },
     dot:{
         padding: 6,

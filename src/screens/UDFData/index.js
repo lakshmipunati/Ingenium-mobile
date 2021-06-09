@@ -5,21 +5,20 @@ import { LabelValue } from '../../components/label-value';
 
 export const UDFData = (props) => {
 
-    const reducerData = useSelector((state)=>state.dataTab);
-    const {selectedUDFs} = reducerData.entity;
+    const {entity} = useSelector((state)=>state.dataTab);
     return (
         <View style={styles.container}>
-        {/* <KeyboardAvoidingView>
+        <KeyboardAvoidingView>
             <ScrollView>
-                {selectedUDFs && selectedUDFs.length>0 ? (
-                    selectedUDFs.map((i, k)=>(
-                        i.value ? (
-                            <LabelValue key={k} label={i.label} value={i.value} />
+                {entity && entity.UDFLookupList && entity.UDFLookupList.length>0 ? (
+                    entity.UDFLookupList.map((i, k)=>(
+                        entity[i.label] ? (
+                            <LabelValue key={k} label={i.label ? i.label : ""} value={entity[i.label] !== undefined ? entity[i.label].toString() : ""} />
                         ) : null
                     ))
                 ) : null}           
             </ScrollView>
-        </KeyboardAvoidingView> */}
+        </KeyboardAvoidingView>
     </View>
     )
 }

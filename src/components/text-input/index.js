@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View, Text, Image, TouchableOpacity } from "react-native";
 import { BarCodeScanner } from "../bar-code-scanner";
 import { lookup, barcodeCamera, anchorIcon, searchLocation } from "../../assets/images";
+import { AnchorIcon, BarcodeIcon, LookupIcon, SearchIcon } from "../../assets";
 
 export function SharedTextInput(props) {
     const [scannerActive, setScannerActive] = useState(true);
@@ -27,23 +28,35 @@ export function SharedTextInput(props) {
                        /> 
                         {props.isSearch ? 
                             <TouchableOpacity style={styles.button} onPress={()=>props.onClickSearch(props.name)}>
-                                <Image style={styles.iconStyle} source={searchLocation} />
+                                <View style={styles.iconStyle}>
+                                    <SearchIcon width="25px" height="30px" fill="#059DCC" />
+                                </View>
+                                
                             </TouchableOpacity>
                         : null }
                         {props.isLookup ? <TouchableOpacity style={styles.button} onPress={()=>props.onClickLookup(props.name)}>
-                                <Image style={styles.iconStyle} source={lookup} />
+                                  <View style={styles.iconStyle}>
+                                    <LookupIcon width="25px" height="30px" fill="#059DCC" />
+                                </View>
+                          
                             </TouchableOpacity> 
                         : null }
                            
                         {props.isScanner ? 
                             <TouchableOpacity style={styles.button} onPress={()=>props.onClickScanner(props.name)}>
-                                <Image style={styles.iconStyle} source={barcodeCamera} />
+                                  <View style={styles.iconStyle}>
+                                    <BarcodeIcon width="25px" height="30px" fill="#059DCC" />
+                                </View>
+                                
                             </TouchableOpacity>
                         : null }
 
                         {props.isDefault ? 
                             <TouchableOpacity style={styles.button} onPress={()=>props.onClickDefault(props.name)}>
-                                <Image style={styles.iconStyle} source={anchorIcon} />
+                                  <View style={styles.iconStyle}>
+                                    <AnchorIcon width="25px" height="30px" fill="#059DCC" />
+                                </View>
+                                
                             </TouchableOpacity>
                         : null }
                          
@@ -130,11 +143,13 @@ const styles = StyleSheet.create({
     },
     iconStyle: {
         borderWidth: 1,
-        borderColor: "#ccc",
-        width: 40,
-        height: 45,
+        borderColor: "#059DCC",
+        width: 35,
+        height: 40,
         marginTop: 0,
         borderRadius: 10,
-        marginLeft: -5
+        marginLeft: 0,
+        alignItems: 'center', 
+        justifyContent: 'center'
     },
 })

@@ -33,7 +33,10 @@ const entity = {
     UDFLookupList: [],
     conditionCodeList: [],
     selectedUDFs: [],
-    udfTypes: []
+    udfTypes: [],
+    permissions: [],
+    securityLevel: "FULL ACCESS"
+    // securityLevel: "READ ONLY"
 }
 
 export const dataTab = createSlice({
@@ -47,11 +50,11 @@ export const dataTab = createSlice({
         },
         [lookupByAssetNumberAction.fulfilled]: (state, { payload }) => {
             state.loading = false;
-
+            const {defaultValues, permissions, securityLevel} = state.entity;
             if (payload.data) {
                 state.errorMsg = payload.data
             } else {
-                const {location, selectedConditionCode} = state.entity.defaultValues;
+                const {location, selectedConditionCode} = defaultValues;
                 state.errorMsg = undefined;
                 if (location) {
                     delete payload.location;
@@ -60,11 +63,19 @@ export const dataTab = createSlice({
                 if (selectedConditionCode) {
                     delete payload.selectedConditionCode;
                 }
-          
-
+                const accessIndex = permissions.findIndex((i)=>i.dataCategory===payload.DataCategory);
+                // console.log(permissions,"====PEr==",permissions[accessIndex] ? permissions[accessIndex] : undefined)
+                if(permissions[accessIndex] && permissions[accessIndex].securityLevel== 'NO ACCESS'){
+                    state.entity = {
+                        ...state.entity,
+                        securityLevel: accessIndex>-1 && permissions[accessIndex] ? permissions[accessIndex].securityLevel:securityLevel,
+                    }
+                }else{
                 state.entity = {
                     ...state.entity,
-                    ...payload
+                    ...payload,
+                    securityLevel: accessIndex>-1 && permissions[accessIndex] ? permissions[accessIndex].securityLevel:securityLevel,
+                }
                 }
             }
         },
@@ -97,7 +108,8 @@ export const dataTab = createSlice({
                 UDFLookupList: state.entity.UDFLookupList,
                 conditionCodeList: state.entity.conditionCodeList,
                 udfTypes: state.entity.udfTypes,
-                selectedUDFs: state.entity.selectedUDFs.map((i)=>({ key: i.key, label: i.label, fieldType: i.fieldType }))
+                selectedUDFs: state.entity.selectedUDFs.map((i)=>({ key: i.key, label: i.label, fieldType: i.fieldType })),
+                permissions: state.entity.permissions.map((i)=>i)
             }
         },
 
@@ -126,6 +138,9 @@ export const dataTab = createSlice({
             state.entity.UDFLookupList = payload.userDefinedFields ? payload.userDefinedFields : [];
             state.entity.udfTypes = payload.udfTypes;
             state.entity.conditionCodeList = payload.conditionCode;
+            state.entity.permissions = payload.permissions
+
+
         },
 
         [getUDFDataAction.rejected]: (state, error) => {

@@ -5,7 +5,7 @@ import {
     LOGIN_API,
 } from '../../config';
 
-import { saveTokenToStorage, setAxiosGlobalConfig } from "./token.service";
+import { retrieveTokenFromStorage, saveTokenToStorage, setAxiosGlobalConfig } from "./token.service";
 
 export const loginAPI = ({companyID, userName, password}) => {
     return axios({
@@ -21,11 +21,44 @@ export const loginAPI = ({companyID, userName, password}) => {
             'CompanyAssignedCode' : companyID,
         }
     })
-        .then((response) => {
-            let { data } = response;      
-            saveTokenToStorage({ token: data['token'],companyCode:companyID, emailid: data.loggInUser.emailId });
-            setAxiosGlobalConfig({  token: data['token'],companyCode:companyID, emailid: data.loggInUser.emailId });
+        .then(async(response) => {
+            let { data } = response;   
+            if(data.jwtAccessToken){  
+                saveTokenToStorage({ 
+                    token: data.jwtAccessToken,
+                    companyCode:companyID, 
+                    emailid: data.emailId,
+                    userID: data.userId,
+                    companyStoragePath: data.companyStoragePath
+                });
+                setAxiosGlobalConfig({ 
+                    token: data.jwtAccessToken,
+                    companyCode:companyID, 
+                    emailid: data.emailId
+                });
+            }
+           
             return data;
         }).catch(({response})=>response)
+
+}
+
+export const getUserPermissionApi=async()=>{
+    const token = await retrieveTokenFromStorage();  
+    return axios({
+            method: 'get',
+            url: `/usersdatacategories/${token[3][1]}`,
+            baseURL: API_BASE_PATH,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                Authorization: `bearer ${token[0][1]}`,
+                'CompanyAssignedCode' : token[1][1],
+            }
+        })
+        .then((res)=>{
+            return res.data
+        }).catch(({response})=>{
+            return response;
+        })
 
 }

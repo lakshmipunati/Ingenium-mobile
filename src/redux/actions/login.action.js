@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Alert } from "react-native";
 import { showAlert } from "../../components";
-import {loginAPI, removeAccessTokenFromStorage} from "../services";
+import {loginAPI, removeAccessTokenFromStorage, getUserPermissionApi} from "../services";
 
 export const loginUser=createAsyncThunk('user/login',async(data)=>{
     const response = await loginAPI(data);

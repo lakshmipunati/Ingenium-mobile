@@ -102,15 +102,17 @@ export const Setup = (props) => {
                     {field.fieldType == "TEXT" ? 
                     udfTypes[field.label].length>0 ? 
                     (
+                      <View style={{flex: 1.2}}>
                       <ModelSelector
                         listItems={udfTypes[field.label]}
                         onChange={({label})=>onChangeText(field.label,label, true)}
                         initValue={field.value ? field.value : ''}
                         selectTextStyle={{fontSize: 13, color: 'black'}}
                       />
+                      </View>
                     ) :  
                     (
-                      <View style={{flex: 1}}>
+                      <View style={{flex: 1.2}}>
                       <SharedTextInput
                           keyboardType="ascii-capable"
                           label=""
@@ -130,7 +132,7 @@ export const Setup = (props) => {
                     : null}
 
                     {field.fieldType == "CURRENCY" || field.fieldType== "NUMERIC" ? 
-                     <View style={{flex: 1 ,position: 'relative'}}>
+                     <View style={{flex: 1.2 ,position: 'relative'}}>
                        {field.fieldType == "CURRENCY" ? 
                         <Text style={styles.currencyText}>$</Text>
                        : null}
@@ -154,7 +156,7 @@ export const Setup = (props) => {
                     : null }
                    
                    {field.fieldType==="DATE" ? 
-                   <View style={{flex: 1, marginTop: -30}}>
+                   <View style={{flex: 1.2, marginTop: -30}}>
                       <SharedDateTimePicker
                           label=""
                           name={field.label}
@@ -165,7 +167,7 @@ export const Setup = (props) => {
                   : null}  
 
                     {field.fieldType==="TRUE/FALSE" ? 
-                            <View style={{flexDirection: 'row', flex: 1,marginTop: 10}}>
+                            <View style={{flexDirection: 'row', flex: 1.2,marginTop: 10}}>
                                 <View>
                                     <RadioBtn 
                                       isSelected={field.value==true ? true : false} 
@@ -187,7 +189,7 @@ export const Setup = (props) => {
                               </View>
                         
                       : null} 
-                    <TouchableOpacity onPress={() => deleteUDF(field)} style={{marginLeft: 10, textAlign: 'center'}}>
+                    <TouchableOpacity onPress={() => deleteUDF(field)} style={{marginLeft: 10, textAlign: 'center', flex: 0.1}}>
                       <CloseIcon height="40px" width="25px" fill="#059DCC" />
                     </TouchableOpacity>
                   </View>
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
   },
   listElement: {
     padding: 10,
-    flex: 0.5,
+    flex: 0.6,
     borderRadius: 20
   },
   currencyText: {

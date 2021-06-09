@@ -1,5 +1,5 @@
 
-import { ACCESS_TOKEN_KEY, COMPANY_CODE_KEY, USER_EMAIL_ID } from "../../config";
+import { ACCESS_TOKEN_KEY, COMPANY_CODE_KEY, COMPANY_STORAGE_PATH, USER_ACCESS_PERMISSION, USER_EMAIL_ID, USER_ID } from "../../config";
 import axios from "axios";
 import { AsyncStorage } from "react-native";
 
@@ -10,7 +10,7 @@ export const setAxiosGlobalConfig = ({token,companyCode}) => {
     axios.defaults.headers.common['CompanyCode'] = companyCode;
 }
 
-export const saveTokenToStorage = ({token,companyCode, emailid}) => {
+export const saveTokenToStorage = ({token,companyCode, emailid, userID, companyStoragePath}) => {
     return new Promise((resolve, reject) => {
         AsyncStorage.setItem(
             ACCESS_TOKEN_KEY,
@@ -30,6 +30,20 @@ export const saveTokenToStorage = ({token,companyCode, emailid}) => {
                     if (err) reject(err);
                     resolve();
             });
+            AsyncStorage.setItem(
+                USER_ID,
+                userID, (err) => {
+                    if (err) reject(err);
+                    resolve();
+            });
+
+            AsyncStorage.setItem(
+                COMPANY_STORAGE_PATH,
+                companyStoragePath, (err) => {
+                    if (err) reject(err);
+                    resolve();
+            });
+            
     })
 }
 
@@ -38,7 +52,9 @@ export const retrieveTokenFromStorage = () => {
         AsyncStorage.multiGet([
             ACCESS_TOKEN_KEY,
             COMPANY_CODE_KEY,
-            USER_EMAIL_ID
+            USER_EMAIL_ID,
+            USER_ID,
+            COMPANY_STORAGE_PATH
         ], (err, result) => {
             if (err || result[0][1] == null) {
                 reject();
@@ -52,6 +68,8 @@ export const removeAccessTokenFromStorage = () => {
     AsyncStorage.removeItem(ACCESS_TOKEN_KEY);
     AsyncStorage.removeItem(COMPANY_CODE_KEY);
     AsyncStorage.removeItem(USER_EMAIL_ID);    
+    AsyncStorage.removeItem(USER_ID); 
+    AsyncStorage.removeItem(COMPANY_STORAGE_PATH); 
     return undefined
 }
 

@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 18,
-        backgroundColor: "white",
+        backgroundColor: "#fff",
     },
     inputContainer: {
         marginTop: 10,
@@ -43,12 +43,15 @@ export const styles = StyleSheet.create({
     },
     iconStyle: {
         borderWidth: 1,
-        borderColor: "#ccc",
-        width: 45,
-        height: 42,
-        marginTop: -10,
+        borderColor: "#059DCC",
+        width: 35,
+        height: 40,
+        marginTop: 0,
         borderRadius: 10,
-        marginLeft: -5
+        marginLeft: 0,
+        alignItems: 'center', 
+        justifyContent: 'center',
+        marginTop: -10
     },
     udfTitle:{
         fontWeight: 'bold',
