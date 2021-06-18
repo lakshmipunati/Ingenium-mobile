@@ -12,7 +12,7 @@ export function AppContainer(props) {
     // 360000
   )
   useEffect(() => {
-    resetInactivityTimeout()
+    // resetInactivityTimeout()
   }, []);
 
   const dispatch = useDispatch()
@@ -37,9 +37,9 @@ export function AppContainer(props) {
   return (
     
     
-        <View style={{ flex: 1 }} {...panResponder.panHandlers}>
+        // <View style={{ flex: 1 }} {...panResponder.panHandlers}>
             <Navigation {...props}/>      
-        </View>
+        // </View>
   
   
   );

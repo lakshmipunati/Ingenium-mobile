@@ -184,8 +184,9 @@ export const getSelectedUDFFieldData = createAsyncThunk('selected/udf/datafiled/
 
 export const saveForm = createAsyncThunk('save/form/data', async (data, { getState, dispatch }) => {
     try {
-        showAlert("Save form");
+        // showAlert("Save form");
         const { entity } = getState().dataTab;
+        let status = true;
         let query = {
             ID: entity.assetID,
             AssetNumber: entity.assetNumber,
@@ -200,26 +201,55 @@ export const saveForm = createAsyncThunk('save/form/data', async (data, { getSta
         }
         for (let i = 0; i <= entity.selectedUDFs.length; i++) {
            // showAlert(entity.selectedUDFs[i].value + "selectedUdf")
-            if (entity.selectedUDFs[i].value == undefined) {
+        
+            if(entity.selectedUDFs[i] && entity.selectedUDFs[i].value){
+                // console.log("OKay")
+            }
+            else{
                 let data = {
+                    // name: entity.selectedUDFs[i].label,
                     alertMessage: "Confirm",
                     alertMessageContent: "is empty. Do you wish to update as empty? ",
                 };
-                dispatch(confirmationDialog({
-                    data: data,
-                    saveForm: saveForm(),
-                    dispatch: dispatch,
-                    getState: getState(),
-                    selectedUDFObj: entity.selectedUDFs[i],
-                    entity: entity
-                }))
-                return;
+          
+                Alert.alert(
+                    data.alertMessage,
+                    data.alertMessageContent,
+                    [
+                        { text: "YES", onPress: ()=>{
+                            status=false;
+                          
+                        } },
+                        { text: "NO", onPress: () => {  
+                            status=true;
+                         
+                        }, style: "cancel" },
+                    ],
+                {cancelable: false},
+                );
+
+                // Alert.alert()
+                // dispatch(confirmationDialog({
+                //     data: data,
+                //     // saveForm: saveForm(),
+                //     // dispatch: dispatch,
+                //     // getState: getState(),
+                //     selectedUDFObj: entity.selectedUDFs[i],
+                //     entity: entity
+                // }))
+                // break;
+            }
+            if(!status){
+                break;
             }
         }
 
         for (let i = 0; i <= entity.selectedUDFs.length; i++) {
-            query[entity.selectedUDFs[i].label] = entity.selectedUDFs[i].value;
-            console.log(query)
+            if(entity.selectedUDFs[i] && entity.selectedUDFs[i].label){
+                query[entity.selectedUDFs[i].label] = entity.selectedUDFs[i].value;
+            }
+          
+            // console.log(query)
         }
 
         //  let udfValidationErrors = validateUDF(mobileformSetup.selectedUDFs);
@@ -231,21 +261,30 @@ export const saveForm = createAsyncThunk('save/form/data', async (data, { getSta
         //     return false;
         // }
 
-        console.log(query);
-        alert("save before")
-        const response = await saveMobileformDataAPI(query).catch((e) => {
-            let errorMessage = ''
-            if (typeof (e.response.data) == 'string') {
-                errorMessage = e.response.data;
-            } else {
-                errorMessage = e.response.data.result;
+        // console.log(query);
+        // alert("save before")
+
+        console.log("==#22data===",query)
+        if(status){
+            const response = await saveMobileformDataAPI(query)
+            // .catch((e) => {
+                // let errorMessage = ''
+                // if (typeof (e.response.data) == 'string') {
+                //     errorMessage = e.response.data;
+                // } else {
+                //     errorMessage = e.response.data.result;
+                // }
+                // showAlert(errorMessage);
+            //     return e
+            // })
+            if (response) {
+                console.log("==#2233333data===",response)
+                // dispatch(clearDataFields());
+                showAlert(response);
+                return response
             }
-            showAlert(errorMessage);
-        })
-        if (response) {
-            dispatch(clearDataFields());
-            showAlert(response);
         }
+      
         // dispatch({
         //     type: SHOWLOADER
         // });
@@ -298,12 +337,14 @@ export const validateMobileformData = (assetData) => {
 
 export const confirmationDialog =  createAsyncThunk('confirmationDialog/data', async (data, { getState, dispatch }) => {
     showAlert("Confirm")
-    console.log(data)
+    console.log("==#1==")
     let alertMessage = null;
     let alertMessageContent = null;
     if (typeof data.data == "string") {
+        console.log("==#2==")
         alertMessageContent = data.data;
     } else if (typeof data.data == "object") {
+        console.log("==#3==")
         console.log(data.selectedUDFObj)
         alertMessage = "Confirm";
         alertMessageContent =
@@ -317,17 +358,15 @@ export const confirmationDialog =  createAsyncThunk('confirmationDialog/data', a
                 data.entity.selectedUDFs[i].value = "";
             }
         }
-        console.log(data)
 
-        dispatch(data.saveForm());
+        dispatch(saveForm());
     };
     if (!alertMessage && !alertMessageContent) return;
-
     Alert.alert(
         alertMessage,
         alertMessageContent,
         [
-            { text: "YES", onPress: yesClicked() },
+            { text: "YES", onPress: ()=>yesClicked },
             { text: "NO", onPress: () => { }, style: "cancel" },
         ],
         { cancelable: false }
