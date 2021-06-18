@@ -65,7 +65,7 @@ export function Login(props){
                                         name="companyID"
                                         keyboardType="email-address"
                                         value={state.companyID}
-                                        placeholder="Commpany ID"
+                                        placeholder="Company ID"
                                         onChangeText={(name, value)=>_handleChangeText(name, value)}
                                         leftIcon={<ContactIcon height="30px" width="25px" fill="#B5B3B2" />}
                                     />

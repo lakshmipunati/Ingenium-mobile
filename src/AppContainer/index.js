@@ -8,7 +8,7 @@ import { logoutUser } from '../redux';
 export function AppContainer(props) {
   const timerId = useRef(false);
   const [timeForInactivityInSecond, setTimeForInactivityInSecond] = useState(
-    4*3600*1000
+    1*3600*1000
     // 360000
   )
   useEffect(() => {
