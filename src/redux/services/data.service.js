@@ -143,6 +143,7 @@ const transformUDFSuggestionList = (data) => {
 }
 
 export const saveMobileformDataAPI=(data)=>{
+    console.log("API HIT")
     return "Saved successfully..."
 }
 
