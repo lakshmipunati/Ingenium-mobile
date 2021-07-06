@@ -1,46 +1,42 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Navigation} from "../navigation"
+import React, { useState, useEffect, useRef } from 'react';
+import { Navigation } from '../navigation';
 
-import {PanResponder, View } from "react-native"
+import { PanResponder, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../redux';
 
 export function AppContainer(props) {
   const timerId = useRef(false);
   const [timeForInactivityInSecond, setTimeForInactivityInSecond] = useState(
-    1*3600*1000
+    1 * 3600 * 1000,
     // 360000
-  )
+  );
   useEffect(() => {
-    // resetInactivityTimeout()
+    resetInactivityTimeout();
   }, []);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const panResponder = React.useRef(
     PanResponder.create({
-      onStartShouldSetPanResponderCapture: () => {        
-        resetInactivityTimeout()
+      onStartShouldSetPanResponderCapture: () => {
+        resetInactivityTimeout();
       },
-    })
-  ).current
+    }),
+  ).current;
 
   const resetInactivityTimeout = () => {
-    clearTimeout(timerId.current)
+    clearTimeout(timerId.current);
     timerId.current = setTimeout(() => {
-      dispatch(logoutUser())
-  
+      dispatch(logoutUser());
+
       // action after user has been detected idle
-    }, timeForInactivityInSecond)
-  }
+    }, timeForInactivityInSecond);
+  };
 
   return (
-    
-    
-        // <View style={{ flex: 1 }} {...panResponder.panHandlers}>
-            <Navigation {...props}/>      
-        // </View>
-  
-  
+    <View style={{ flex: 1 }} {...panResponder.panHandlers}>
+      <Navigation {...props} />
+    </View>
   );
 }

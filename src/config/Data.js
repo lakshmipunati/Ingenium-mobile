@@ -12,3 +12,4 @@ export const UDF_SUGGESTION = '/api/MobileApi/GetUDFSuggestions';
 
 export const ASSETNUMBER_MAXLENGTH = 25;
 
+export const ASSETS_UPDATE_RELOCATE = 'Assets';
