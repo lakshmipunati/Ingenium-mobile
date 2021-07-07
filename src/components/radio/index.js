@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { proportionalSize } from '../../utils';
 
 export const RadioBtn=(props)=>{
  
@@ -7,7 +8,7 @@ export const RadioBtn=(props)=>{
         <View style={styles.container}>
             {props.isSelected ? 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={styles.outerCircle} onPress={()=>props.handleClickRadio(props.name, props.label)}>
+                    <TouchableOpacity style={styles.outerCircle} onPress={()=>props.handleClickRadio(props.name, props.value)}>
                         <View style={styles.dot}/>
                     </TouchableOpacity>
                     <Text style={styles.label}>{props.label}</Text>
@@ -15,7 +16,7 @@ export const RadioBtn=(props)=>{
                 :  
 
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={styles.outerCircle2} onPress={()=>props.handleClickRadio(props.name, props.label)}/>
+                    <TouchableOpacity style={styles.outerCircle2} onPress={()=>props.handleClickRadio(props.name, props.value)}/>
                     <Text style={styles.label}>{props.label}</Text>
                 </View>
             }
@@ -51,13 +52,13 @@ const styles=StyleSheet.create({
     label: {
         // fontWeight: 'bold',
         marginLeft: 10,
-        fontSize: 18
+        fontSize: proportionalSize(50)
     },
     dot:{
         padding: 6,
         borderRadius: 100,
         width: 5,
-        backgroundColor: 'blue'
+        backgroundColor: '#059DCC'
     },
     notSelected: {
 

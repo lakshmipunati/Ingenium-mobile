@@ -1,43 +1,25 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Text } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { LabelValue } from '../../components/label-value';
 
 export const UDFData = (props) => {
-    const reducerData = useSelector((state) => state.dataTab);
-    const { selectedUDFs } = reducerData.entity;
 
-    const dataRendering = () => {
-        if (selectedUDFs.length > 0) {
-            return (
-                <View>
-                    {selectedUDFs &&
-                        selectedUDFs.map((field, index) => {
-                            return (
-                                <ScrollView>
-                                    <LabelValue label={field.label} value={null} />
-                                </ScrollView>
-                            )
-                        })
-                    }
-
-                </View>
-            )
-        } else {
-            return (
-                <View>
-                    <Text style={{ textAlign: 'center', fontSize: 16 }}> UDF data not Available</Text>
-                </View>
-            )
-        }
-    }
-
+    const {entity} = useSelector((state)=>state.dataTab);
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView>
-                {dataRendering()}
-            </KeyboardAvoidingView>
-        </View>
+        <KeyboardAvoidingView>
+            <ScrollView>
+                {entity && entity.UDFLookupList && entity.UDFLookupList.length>0 ? (
+                    entity.UDFLookupList.map((i, k)=>(
+                        entity[i.label] ? (
+                            <LabelValue key={k} label={i.label ? i.label : ""} value={entity[i.label] !== undefined ? entity[i.label].toString() : ""} />
+                        ) : null
+                    ))
+                ) : null}           
+            </ScrollView>
+        </KeyboardAvoidingView>
+    </View>
     )
 }
 

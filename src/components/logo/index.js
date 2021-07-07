@@ -11,7 +11,7 @@ export const LogoWithVersion=(props)=>{
             source={ingeniumLogo}
             resizeMode="contain"
         />            
-        <Text style={styles.versionText}>V2.2</Text>        
+        <Text style={styles.versionText}>V2.1.1</Text>        
     </View>
     )
 }
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     },
     versionText: {
         position: 'absolute',
-        right: 30,
-        bottom: 50, 
+        right: 40,
+        bottom: 60, 
         color: 'red', 
         fontWeight: 'bold'
     },
     logo: {
-        width: width - 150
+        width: width - 180
     },
 })
