@@ -74,16 +74,17 @@ export const Data = (props) => {
     var obj = {};
     if (
       assetNumber == null ||
-      assetNumber.trim() == '' ||
-      location == null ||
-      location.trim() == ''
+      assetNumber.trim() == ''
+      // location == null ||
+      // location.trim() == ''
     ) {
-      await AsyncAlert('', 'Assetnumber or Location should not be empty!');
+      await AsyncAlert('', 'Assetnumber should not be empty!');
     } else if (selectedUDFs && selectedUDFs.length > 0) {
       // console.log('===####selectedConditionCode===', '1');
       obj = {
         AssetNumber: assetNumber,
         Location: location,
+        ConditionCode: selectedConditionCode,
         // selectedConditionCode,
       };
       for (let i = 0; i < selectedUDFs.length; i++) {
@@ -120,7 +121,7 @@ export const Data = (props) => {
       obj = {
         AssetNumber: assetNumber,
         Location: location,
-        // selectedConditionCode,
+        ConditionCode: selectedConditionCode,
       };
     }
 
@@ -133,6 +134,10 @@ export const Data = (props) => {
     if (res && res.status && res.obj) {
       dispatch(updateRelocateForm(res.obj)).then(({ payload }) => {
         if (payload && payload.message) {
+          if (payload.data && payload.data === true) {
+            dispatch(clearDataFields());
+          }
+
           AsyncAlert('', payload.message);
         }
       });
@@ -434,7 +439,13 @@ export const Data = (props) => {
                           <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 1 }}>
                               <RadioBtn
-                                isSelected={i.value == true ? true : false}
+                                isSelected={
+                                  i.value !== '' &&
+                                  i.value !== undefined &&
+                                  i.value == true
+                                    ? true
+                                    : false
+                                }
                                 label='True'
                                 value={true}
                                 name={i.label}
@@ -445,7 +456,13 @@ export const Data = (props) => {
                             </View>
                             <View style={{ flex: 1 }}>
                               <RadioBtn
-                                isSelected={i.value == false ? true : false}
+                                isSelected={
+                                  i.value !== '' &&
+                                  i.value !== undefined &&
+                                  i.value == false
+                                    ? true
+                                    : false
+                                }
                                 label='False'
                                 value={false}
                                 name={i.label}

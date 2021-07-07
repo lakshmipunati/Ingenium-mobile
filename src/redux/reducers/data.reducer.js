@@ -114,9 +114,19 @@ export const dataTab = createSlice({
     [clearDataFields.fulfilled]: (state, { payload }) => {
       state.entity = {
         ...entity,
+        defaultValues: state.entity.defaultValues,
         UDFLookupList: state.entity.UDFLookupList,
         conditionCodeList: state.entity.conditionCodeList,
         udfTypes: state.entity.udfTypes,
+
+        location:
+          state.entity.defaultValues.location == true
+            ? state.entity.location
+            : '',
+        selectedConditionCode:
+          state.entity.defaultValues.selectedConditionCode == true
+            ? state.entity.selectedConditionCode
+            : '',
         selectedUDFs: state.entity.selectedUDFs.map((i) => ({
           key: i.key,
           label: i.label,

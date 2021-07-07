@@ -161,9 +161,9 @@ export const saveMobileformDataAPI = async (payload) => {
   })
     .then((response) => {
       let { data } = response;
-      console.log('===####111===', data);
       return {
         isError: false,
+        data,
         message: data
           ? `Form successfully ${
               payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
@@ -174,7 +174,6 @@ export const saveMobileformDataAPI = async (payload) => {
       };
     })
     .catch(({ response }) => {
-      console.log('===####2222===', response);
       return {
         isError: false,
         response,
