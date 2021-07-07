@@ -11,7 +11,7 @@ export function SharedDateTimePicker(props) {
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
+    setShow(false);
     setDate(currentDate);
     props.handleChangeDate(props.name, currentDate);
   };
