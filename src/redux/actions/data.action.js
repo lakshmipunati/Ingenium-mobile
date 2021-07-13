@@ -22,7 +22,9 @@ export const lookupByAssetNumberAction = createAsyncThunk(
   async (assetNumber, { getState, dispatch }) => {
     const { selectedUDFs } = getState().dataTab.entity;
     const response = await assetNumberLookupAPI(assetNumber);
+    //getConditionCodeApi(response.DataCategory);
     console.log('===conditionCodeList===', response);
+    dispatch(getUDFDataAction(response.DataCategory))
     if (response && response.data) {
       showAlert(response.data);
       dispatch(clearDataFields());
@@ -78,7 +80,7 @@ export const getUDFDataAction = createAsyncThunk(
   'setup/lookup/udf',
   async (data, { dispatch }) => {
     const response = await getUDFListApi();
-    const ccCode = await getConditionCodeApi();
+    const ccCode = await getConditionCodeApi(data != undefined ? data : undefined);
     const permissions = await getUserPermissionApi();
     let udfTypes = {};
     const { userDefinedFields } = response;
