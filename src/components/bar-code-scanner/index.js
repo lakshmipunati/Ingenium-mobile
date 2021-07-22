@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner as Scanner } from 'expo-barcode-scanner';
+import { showAlert } from '../Alerts';
 
 export function BarCodeScanner(props) {
     const [hasPermission, setHasPermission] = useState(null);
@@ -19,7 +20,9 @@ export function BarCodeScanner(props) {
     if (hasPermission === null) {
       return <Text>Requesting for camera permission</Text>;
     }
-    if (hasPermission === false) {
+    if (hasPermission === false) {     
+      showAlert("No access to camera");
+      props.setScanned(false, null, props.activeTab, props.isUdf);
       return <Text>No access to camera</Text>;
     }
   

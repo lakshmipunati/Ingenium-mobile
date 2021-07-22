@@ -11,7 +11,7 @@ export const LogoWithVersion=(props)=>{
             source={ingeniumLogo}
             resizeMode="contain"
         />            
-        <Text style={styles.versionText}>V2.1.1</Text>        
+        <Text style={styles.versionText}>V3.0.0</Text>        
     </View>
     )
 }

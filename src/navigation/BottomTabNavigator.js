@@ -8,6 +8,7 @@ import { logoutUser } from '../redux';
 
 import { Setup, Data, UDFData, Description } from '../screens';
 import { proportionalSize } from '../utils';
+import { Alert } from 'react-native';
 
 const BottomTab = createBottomTabNavigator();
 export default function BottomTabNavigator(props) {
@@ -105,8 +106,20 @@ function TabUdfNavigator() {
 
 function HeaderContainer(headerTitle) {
   const dispatch = useDispatch();
-  const _handleLogout = () => {
+  const confirmLogout = () => {
     dispatch(logoutUser());
+  }
+  const _handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Tap OK to confirm logout",
+      [
+          { text: "Cancel", onPress: () => {} },
+          { text: "OK", onPress: confirmLogout },
+      ],
+      { cancelable: false }
+  )
+    
   };
   return {
     headerTitle,

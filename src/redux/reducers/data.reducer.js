@@ -182,6 +182,13 @@ export const dataTab = createSlice({
         value: filterValue && filterValue[0] ? filterValue[0].UDFFieldData : '',
       };
       state.entity.selectedUDFs = [...state.entity.selectedUDFs, obj];
+      state.entity.selectedUDFs.sort((a, b) => {
+        let fa = a.label,
+          fb = b.label;
+        if (fa < fb) { return -1; }
+        if (fa > fb) { return 1; }
+        return 0;
+      });
     },
 
     [removeSelectedUDFAction.fulfilled]: (state, { payload }) => {
