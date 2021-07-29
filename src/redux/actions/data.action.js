@@ -31,7 +31,7 @@ export const lookupByAssetNumberAction = createAsyncThunk(
       return false;
     }
     if (response.config && response.config.data == undefined) {
-      showAlert('Asset number is not matching!');
+      showAlert('Asset not found!');
       dispatch(clearDataFields());
       return false;
     }

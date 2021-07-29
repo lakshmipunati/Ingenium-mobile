@@ -1,5 +1,6 @@
 import axios from "axios";
 import qs from 'qs';
+import { showAlert } from "../../components";
 import {
     API_BASE_PATH,
     LOGIN_API,
@@ -22,7 +23,8 @@ export const loginAPI = ({companyID, userName, password}) => {
         }
     })
         .then(async(response) => {
-            let { data } = response;   
+            let { data } = response;  
+            console.log("==== Login Response ==========", response) 
             if(data.jwtAccessToken){  
                 saveTokenToStorage({ 
                     token: data.jwtAccessToken,
@@ -39,7 +41,12 @@ export const loginAPI = ({companyID, userName, password}) => {
             }
            
             return data;
-        }).catch(({response})=>response)
+        }).catch(({response})=>{
+            response
+            showAlert("Incorrect UserID or Password");
+            console.log("==== Login Cache block Response ==========", response) 
+        }
+        )
 
 }
 

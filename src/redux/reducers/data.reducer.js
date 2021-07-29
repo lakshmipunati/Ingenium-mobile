@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { showAlert } from '../../components'
 import {
   clearDataFields,
   defaltValueSetup,
@@ -102,6 +103,7 @@ export const dataTab = createSlice({
     [selectedTypeUpdate.fulfilled]: (state, { payload }) => {
       const { type, title } = payload;
       state.loading = false;
+
       state.entity = {
         ...state.entity,
         [type]: title,
@@ -181,6 +183,13 @@ export const dataTab = createSlice({
         ...payload,
         value: filterValue && filterValue[0] ? filterValue[0].UDFFieldData : '',
       };
+      state.entity.selectedUDFs.forEach(function (obj) {
+        if (obj.fieldType == "CURRENCY" && obj.value != undefined && obj.value != "") {
+          let udfValue = parseFloat(obj.value);
+          obj.value = udfValue.toFixed(2);
+        }
+      });
+
       state.entity.selectedUDFs = [...state.entity.selectedUDFs, obj];
       state.entity.selectedUDFs.sort((a, b) => {
         let fa = a.label,

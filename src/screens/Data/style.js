@@ -49,12 +49,17 @@ export const styles = StyleSheet.create({
         marginTop: 0,
         borderRadius: 10,
         marginLeft: 0,
-        alignItems: 'center', 
+        alignItems: 'center',
         justifyContent: 'center',
         marginTop: -10
     },
-    udfTitle:{
+    udfTitle: {
         fontWeight: 'bold',
         fontSize: 20
+    },
+    noUdf: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        textAlign: "center"
     }
 })

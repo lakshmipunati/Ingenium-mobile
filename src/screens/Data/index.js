@@ -354,11 +354,16 @@ export const Data = (props) => {
                   name='productCategory'
                   placeholder=''
                   style={{ minWidth: width - 36, height: 45 }}
+                  editable
                   value={productCategory ? productCategory.toString() : ''}
                   onChangeText={(name, value) => onChangeText(name, value)}
                 />
               </View>
-
+              {selectedUDFs && selectedUDFs.length == 0 ? (
+                <View style={styles.inputContainer}>
+                <Text style={styles.noUdf}>NO UDF Data</Text>
+                </View>
+              ): null}
               {selectedUDFs && selectedUDFs.length > 0 ? (
                 <View style={styles.inputContainer}>
                   <Text style={styles.udfTitle}>User Defined Fields</Text>

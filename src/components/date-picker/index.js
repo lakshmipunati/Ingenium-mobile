@@ -26,7 +26,7 @@ export function SharedDateTimePicker(props) {
   };
 
   const getDate = (newDate) =>
-    newDate ? moment(newDate).format('DD-MM-YYYY') : null;
+    newDate ? moment(newDate).format('MM-DD-YYYY') : null;
 
   return (
     <View style={styles.inputContainer}>
@@ -47,7 +47,7 @@ export function SharedDateTimePicker(props) {
           mode='date'
           display='default'
           onChange={onChange}
-          dateFormat='DD-MM-YYYY'
+          dateFormat='MM-DD-YYYY'
         />
       )}
     </View>
