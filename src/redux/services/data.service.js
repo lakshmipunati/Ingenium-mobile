@@ -152,7 +152,27 @@ const transformUDFSuggestionList = (data) => {
     return { searchResultList: suggestions };
 };
 
+// export const checkLocationData = async (locationName) => {
+//     showAlert(locationName)
+//     return axios({
+//         method: 'GET',
+//         url:  SEARCH_LOCATION + "/" + locationName ,
+//         baseURL: API_BASE_PATH,
+//         headers: await headers(),
+//     })
+//         .then((response) => {
+//             console.log("---- location try block ---", response)
+//             let { data } = response;
+//             return data;
+//         })
+//         .catch((response) =>{
+//             console.log("---- location error block ---", response)
+//              response
+//         });
+// }
+
 export const saveMobileformDataAPI = async (payload) => {
+//checkLocationData(payload.Location)
     return axios({
         method: 'POST',
         url: ASSETS_UPDATE_RELOCATE,
@@ -166,8 +186,8 @@ export const saveMobileformDataAPI = async (payload) => {
                 isError: false,
                 data,
                 message: data
-                    ? `Form successfully ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
-                    }`
+                    ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated' 
+                    } Successfully` 
                     : `Oops! Failed to ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
                     } Form`,
             };

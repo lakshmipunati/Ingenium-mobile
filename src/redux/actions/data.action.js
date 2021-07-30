@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { showAlert } from '../../components';
-import { Alert } from 'react-native';
+import { ASSET_NOT_FOUND } from "../../config";
 import {
   assetNumberLookupAPI,
   searchLocationAPI,
@@ -31,7 +31,7 @@ export const lookupByAssetNumberAction = createAsyncThunk(
       return false;
     }
     if (response.config && response.config.data == undefined) {
-      showAlert('Asset not found!');
+      showAlert(ASSET_NOT_FOUND);
       dispatch(clearDataFields());
       return false;
     }
@@ -227,15 +227,15 @@ export const getCompanyStoragePath = createAsyncThunk(
   },
 );
 
-export const validateMobileformData = (assetData) => {
-  let errorMessages = [];
+// export const validateMobileformData = (assetData) => {
+//   let errorMessages = [];
 
-  if (!assetData.AssetNumber) {
-    errorMessages.push('Asset number cannot be empty');
-  }
+//   if (!assetData.AssetNumber) {
+//     errorMessages.push('Asset number cannot be empty');
+//   }
 
-  if (!assetData.Location) {
-    errorMessages.push('Location Cannot be empty');
-  }
-  return errorMessages;
-};
+//   if (!assetData.Location) {
+//     errorMessages.push('Location Cannot be empty');
+//   }
+//   return errorMessages;
+// };

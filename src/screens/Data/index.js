@@ -9,7 +9,6 @@ import {
   Alert,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
 import {
   ModelSelector,
   PageLoader,
@@ -29,7 +28,7 @@ import {
   updateRelocateForm,
 } from '../../redux';
 import { anchorIcon, barcodeCamera } from '../../assets/images';
-
+import { LOCATION_VALIDATION, ASSET_NUMBER_VALIDATION, UDF_CONFIRMATION } from '../../config';
 import { styles } from './style';
 import { AnchorIcon, BarcodeIcon } from '../../assets';
 
@@ -61,10 +60,10 @@ export const Data = (props) => {
   const listitems =
     conditionCodeList && conditionCodeList.length > 0
       ? conditionCodeList.map((i) => ({
-          key: i.key,
-          label: i.label,
-          value: i.value,
-        }))
+        key: i.key,
+        label: i.label,
+        value: i.value,
+      }))
       : [];
 
   // selectedConditionCode
@@ -72,13 +71,10 @@ export const Data = (props) => {
   const validateForm = async () => {
     var status = false;
     var obj = {};
-    if (
-      assetNumber == null ||
-      assetNumber.trim() == ''
-      // location == null ||
-      // location.trim() == ''
-    ) {
-      await AsyncAlert('', 'Assetnumber should not be empty!');
+    if (assetNumber == null || assetNumber.trim() == '') {
+      await AsyncAlert('', ASSET_NUMBER_VALIDATION);
+    } else if (location == null || location.trim() == '') {
+      await AsyncAlert('', LOCATION_VALIDATION);
     } else if (selectedUDFs && selectedUDFs.length > 0) {
       // console.log('===####selectedConditionCode===', '1');
       obj = {
@@ -102,7 +98,7 @@ export const Data = (props) => {
           const res = await AsyncAlertYesNo(
             '',
             selectedUDFs[i].label +
-              ' is empty. Do you wish to update as empty?',
+            UDF_CONFIRMATION,
           );
           obj = {
             ...obj,
@@ -137,7 +133,6 @@ export const Data = (props) => {
           if (payload.data && payload.data === true) {
             dispatch(clearDataFields());
           }
-
           AsyncAlert('', payload.message);
         }
       });
@@ -361,9 +356,9 @@ export const Data = (props) => {
               </View>
               {selectedUDFs && selectedUDFs.length == 0 ? (
                 <View style={styles.inputContainer}>
-                <Text style={styles.noUdf}>NO UDF Data</Text>
+                  <Text style={styles.noUdf}>NO UDF Data</Text>
                 </View>
-              ): null}
+              ) : null}
               {selectedUDFs && selectedUDFs.length > 0 ? (
                 <View style={styles.inputContainer}>
                   <Text style={styles.udfTitle}>User Defined Fields</Text>
@@ -415,13 +410,14 @@ export const Data = (props) => {
                         </View>
                       ) : null}
                       {i.fieldType === 'NUMERIC' ||
-                      i.fieldType === 'CURRENCY' ? (
+                        i.fieldType === 'CURRENCY' ? (
                         <SharedTextInput
                           keyboardType='number-pad'
                           label={i.label}
                           name={i.label}
                           value={i.value ? i.value.toString() : ''}
                           style={{ minWidth: width - 36, height: 45 }}
+                          maxLength={i.maxLength}
                           onChangeText={(name, value) =>
                             onChangeText(name, value, true)
                           }
@@ -446,8 +442,8 @@ export const Data = (props) => {
                               <RadioBtn
                                 isSelected={
                                   i.value !== '' &&
-                                  i.value !== undefined &&
-                                  i.value == true
+                                    i.value !== undefined &&
+                                    i.value == true
                                     ? true
                                     : false
                                 }
@@ -463,8 +459,8 @@ export const Data = (props) => {
                               <RadioBtn
                                 isSelected={
                                   i.value !== '' &&
-                                  i.value !== undefined &&
-                                  i.value == false
+                                    i.value !== undefined &&
+                                    i.value == false
                                     ? true
                                     : false
                                 }
