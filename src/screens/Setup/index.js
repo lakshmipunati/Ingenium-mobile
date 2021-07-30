@@ -35,7 +35,7 @@ export const Setup = (props) => {
   const { UDFLookupList, selectedUDFs, udfTypes } = reducerData.entity;
 
   const UDFLookupListItems = UDFLookupList.map((item) => {
-    return { key: item.key, label: item.label, fieldType: item.fieldType };
+    return { key: item.key, label: item.label, fieldType: item.fieldType , maxLength: item.fieldLength};
   });
 
   const deleteUDF = (selectedUDFObj) => {
@@ -136,6 +136,7 @@ export const Setup = (props) => {
                               placeholder=''
                               style={{ minWidth: width - 90, height: 40 }}
                               value={field.value ? field.value : ''}
+                              maxLength={field.maxLength}
                               onChangeText={(name, value) =>
                                 onChangeText(name, value, true)
                               }
