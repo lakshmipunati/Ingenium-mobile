@@ -73,8 +73,6 @@ export const Data = (props) => {
     var obj = {};
     if (assetNumber == null || assetNumber.trim() == '') {
       await AsyncAlert('', ASSET_NUMBER_VALIDATION);
-    } else if (location == null || location.trim() == '') {
-      await AsyncAlert('', LOCATION_VALIDATION);
     } else if (selectedUDFs && selectedUDFs.length > 0) {
       // console.log('===####selectedConditionCode===', '1');
       obj = {

@@ -36,7 +36,7 @@ const transformAssetNumberLookupResponse = (response) => {
     let selectedConditionCode = response.ConditionCode;
     let assetID = response.ID;
     let unitCost = response.UnitCost;
-    unitCost = "$"+ unitCost.toFixed(2)
+    unitCost = "$" + unitCost.toFixed(2)
     let productCategory = response.DescriptionCatalog[0].ProductCategory;
     // let UDFList = response.UDFList;
     let UDFList = [];
@@ -152,50 +152,52 @@ const transformUDFSuggestionList = (data) => {
     return { searchResultList: suggestions };
 };
 
-// export const checkLocationData = async (locationName) => {
-//     showAlert(locationName)
-//     return axios({
-//         method: 'GET',
-//         url:  SEARCH_LOCATION + "/" + locationName ,
-//         baseURL: API_BASE_PATH,
-//         headers: await headers(),
-//     })
-//         .then((response) => {
-//             console.log("---- location try block ---", response)
-//             let { data } = response;
-//             return data;
-//         })
-//         .catch((response) =>{
-//             console.log("---- location error block ---", response)
-//              response
-//         });
-// }
-
-export const saveMobileformDataAPI = async (payload) => {
-//checkLocationData(payload.Location)
+export const checkLocationData = async (locationName) => {
     return axios({
-        method: 'POST',
-        url: ASSETS_UPDATE_RELOCATE,
+        method: 'GET',
+        url: SEARCH_LOCATION + "/Validate" + "/" + locationName,
         baseURL: API_BASE_PATH,
-        data: payload,
         headers: await headers(),
     })
         .then((response) => {
             let { data } = response;
-            return {
-                isError: false,
-                data,
-                message: data
-                    ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated' 
-                    } Successfully` 
-                    : `Oops! Failed to ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
-                    } Form`,
-            };
+            return data;
         })
-        .catch(({ response }) => {
-            return {
-                isError: false,
-                response,
-            };
+        .catch((response) => {
+            response
         });
+}
+
+export const saveMobileformDataAPI = async (payload) => {
+    let locationValid = await checkLocationData(payload.Location);
+    if (locationValid) {
+        return axios({
+            method: 'POST',
+            url: ASSETS_UPDATE_RELOCATE,
+            baseURL: API_BASE_PATH,
+            data: payload,
+            headers: await headers(),
+        })
+            .then((response) => {
+                let { data } = response;
+                return {
+                    isError: false,
+                    data,
+                    message: data
+                        ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
+                        } Successfully`
+                        : `Oops! Failed to ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
+                        } Form`,
+                };
+            })
+            .catch(({ response }) => {
+                return {
+                    isError: false,
+                    response,
+                };
+            });
+    } else {
+        showAlert("Invalid location");
+        return
+    }
 };
