@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderColor: '#B5B3B2',
         fontSize: 16,
+        textTransform:'uppercase'
     },
     container: {
         flexDirection: 'row'

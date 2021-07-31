@@ -106,7 +106,12 @@ export const Data = (props) => {
           };
           status = res;
           if (res === false) {
-            return status;
+            obj = {
+              ...obj,
+            [selectedUDFs[i].label]: "null"
+            }
+            status = true;
+            //return status;
           }
         }
       }

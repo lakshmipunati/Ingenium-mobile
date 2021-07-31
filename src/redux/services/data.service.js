@@ -169,6 +169,11 @@ export const checkLocationData = async (locationName) => {
 }
 
 export const saveMobileformDataAPI = async (payload) => {
+    for (var propName in payload) {
+        if (payload[propName] === "null") {
+            delete payload[propName];
+        }
+    }
     let locationValid = await checkLocationData(payload.Location);
     if (locationValid) {
         return axios({
@@ -197,7 +202,7 @@ export const saveMobileformDataAPI = async (payload) => {
                 };
             });
     } else {
-        showAlert("Invalid location");
+        showAlert("Location not found!");
         return
     }
 };
