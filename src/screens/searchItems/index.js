@@ -1,97 +1,105 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
 import { useDispatch } from "react-redux";
 import { BackArrowIcon } from "../../assets";
 import { selectedTypeUpdate, triggerSearchItem } from "../../redux";
 
-export function SearchItems(props){
-    const {params} = props.route;
+export function SearchItems(props) {
+    const { params } = props.route;
 
     const [isSearching, setIsSearching] = useState(false);
-    const [searchResultList, setSearchResultList]=useState([])
+    const [searchResultList, setSearchResultList] = useState([])
 
     const dispatch = useDispatch();
 
-    const _handleOnchangeText=(value)=>{
+    const _handleOnchangeText = (value) => {
         setIsSearching(true)
         setTimeout(() => {
-            if(value.trim()!==""){
-            dispatch(triggerSearchItem({type: params.title, text: value, isUdfField: params.isUdfField})).then(({payload})=>{
-                if(payload && payload.searchResultList){
-                    setSearchResultList(payload.searchResultList)
-                }else{
-                    setSearchResultList([])
-                }
-            })
-        }else{
-            setSearchResultList([])
-        }
-        setIsSearching(false);
+            if (value.trim() !== "") {
+                dispatch(triggerSearchItem({ type: params.title, text: value, isUdfField: params.isUdfField })).then(({ payload }) => {
+                    if (payload && !params.isUdfField && payload.searchResultList) {
+                        //  console.log("-----search result list------", payload.searchResultList);
+                        let locationFilterList = payload.searchResultList.filter((e) => {
+                            return (e.key.toLowerCase().includes(value.toLowerCase()))
+                        })
+                        setSearchResultList(locationFilterList)
+                        //console.log("----location after filter---", locationFilterList);
+                    }
+                    else if (payload && payload.searchResultList) {
+                        setSearchResultList(payload.searchResultList)
+                    } else {
+                        setSearchResultList([])
+                    }
+                })
+            } else {
+                setSearchResultList([])
+            }
+            setIsSearching(false);
         }, 1000);
     }
-    const handleSelectItem=(title, type)=>{
-        dispatch(selectedTypeUpdate({title, type, isUdfField: params.isUdfField})).then(({payload})=>{
+    const handleSelectItem = (title, type) => {
+        dispatch(selectedTypeUpdate({ title, type, isUdfField: params.isUdfField })).then(({ payload }) => {
             props.navigation.navigate('Root')
         })
     }
     const Item = ({ title }) => (
-        <TouchableOpacity style={styles.listCell} onPress={()=>handleSelectItem(title, params.title)}>
+        <TouchableOpacity style={styles.listCell} onPress={() => handleSelectItem(title, params.title)}>
             <Text style={styles.listCellText}>
-               {title}
+                {title}
             </Text>
         </TouchableOpacity>
-      );
+    );
 
     const renderItem = ({ item }) => (
         <Item title={item.key} />
-      );
+    );
 
-    return(
+    return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={()=>props.navigation.navigate('Root')}>
-                        <BackArrowIcon width="50px" height="20px" fill="black"/>
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Root')}>
+                        <BackArrowIcon width="50px" height="20px" fill="black" />
                     </TouchableOpacity>
-                    <View style={{flex: 1}}>
+                    <View style={{ flex: 1 }}>
                         <Text style={styles.headerText}>Search {params.title}</Text>
                     </View>
                 </View>
             </View>
             <View>
                 <View>
-                    <TextInput 
-                        style={styles.searchBox} 
-                        onChangeText={(value)=>_handleOnchangeText(value)}
+                    <TextInput
+                        style={styles.searchBox}
+                        onChangeText={(value) => _handleOnchangeText(value)}
                         placeholder={`Search ${params.title}`}
                     />
                 </View>
                 <View style={styles.searchContainer}>
-                    {isSearching ?   
-                        <Text style={styles.searchLabel}>Searching...</Text> 
-                        :  
-                      searchResultList && searchResultList.length>0 ? (
-                        <FlatList
-                            data={searchResultList}
-                            renderItem={renderItem}
-                        />
-                      ):  null
+                    {isSearching ?
+                        <Text style={styles.searchLabel}>Searching...</Text>
+                        :
+                        searchResultList && searchResultList.length > 0 ? (
+                            <FlatList
+                                data={searchResultList}
+                                renderItem={renderItem}
+                            />
+                        ) : null
                     }
-                  
+
                 </View>
             </View>
         </View>
     )
 }
 
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
     headerText: {
-        textAlign: 'center', 
-        paddingRight: 50, 
-        fontWeight: 'bold', 
+        textAlign: 'center',
+        paddingRight: 50,
+        fontWeight: 'bold',
         fontSize: 18
     },
     header: {

@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     value: {
         flex: 1,
         fontSize: 18,
-        color:'#A9A9A9'
+        color:'#A9A9A9',
+        textTransform:'uppercase'
     }
 })
