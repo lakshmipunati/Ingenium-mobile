@@ -159,12 +159,25 @@ export const dataTab = createSlice({
     [getUDFDataAction.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.errorMsg = undefined;
-      state.entity.selectedUDFs = payload.selectedUDFs
-        ? payload.selectedUDFs
-        : [];
+      // state.entity.selectedUDFs = payload.selectedUDFs
+      //   ? payload.selectedUDFs
+      //   : [];
+      state.entity.selectedUDFs =
+        state.entity.selectedUDFs && state.entity.selectedUDFs.length > 0
+          ? state.entity.selectedUDFs
+          : payload.selectedUDFs
+          ? payload.selectedUDFs
+          : [];
       state.entity.UDFLookupList = payload.userDefinedFields
         ? payload.userDefinedFields
         : [];
+       
+        // state.entity.selectedUDFs.filter((e) => {
+        //   if(e.fieldType == 'CURRENCY' && e.value) {
+        //     e.value = parseFloat(e.value).toFixed(2);
+        //   }
+        // })
+        console.log("-----state.entity.selectedUDFs---",state.entity.selectedUDFs)
       state.entity.udfTypes = payload.udfTypes;
       state.entity.conditionCodeList = payload.conditionCode;
       state.entity.permissions = payload.permissions;
@@ -183,12 +196,12 @@ export const dataTab = createSlice({
         ...payload,
         value: filterValue && filterValue[0] ? filterValue[0].UDFFieldData : '',
       };
-      state.entity.selectedUDFs.forEach(function (obj) {
-        if (obj.fieldType == "CURRENCY" && obj.value != undefined && obj.value != "") {
-          let udfValue = parseFloat(obj.value);
-          obj.value = udfValue.toFixed(2);
-        }
-      });
+      // state.entity.selectedUDFs.forEach(function (obj) {
+      //   if (obj.fieldType == "CURRENCY" && obj.value != undefined && obj.value != "") {
+      //     let udfValue = parseFloat(obj.value);
+      //     obj.value = udfValue.toFixed(2);
+      //   }
+      // });
 
       state.entity.selectedUDFs = [...state.entity.selectedUDFs, obj];
       state.entity.selectedUDFs.sort((a, b) => {

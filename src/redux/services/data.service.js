@@ -36,7 +36,7 @@ const transformAssetNumberLookupResponse = (response) => {
     let selectedConditionCode = response.ConditionCode;
     let assetID = response.ID;
     let unitCost = response.UnitCost;
-    unitCost = "$" + unitCost.toFixed(2)
+    unitCost = "$ " + unitCost.toFixed(2)
     let productCategory = response.DescriptionCatalog[0].ProductCategory;
     // let UDFList = response.UDFList;
     let UDFList = [];

@@ -13,7 +13,7 @@ export const UDFData = (props) => {
                 {entity && entity.UDFLookupList && entity.UDFLookupList.length>0 ? (
                     entity.UDFLookupList.map((i, k)=>(
                         entity[i.label] ? (
-                            <LabelValue key={k} label={i.label ? i.label : ""} value={entity[i.label] !== undefined ? entity[i.label].toString() : ""} />
+                            <LabelValue key={k} label={i.label ? i.label : ""} value={entity[i.label] !== undefined ? entity[i.label].toString() : ""} fieldType={i.fieldType} />
                         ) : null
                     ))
                 ) : null}           

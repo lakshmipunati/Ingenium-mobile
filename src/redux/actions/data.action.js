@@ -190,7 +190,6 @@ export const defaltValueSetup = createAsyncThunk(
 
 function getSelctedUdfValues(selectedUDFs, responseUdf) {
   const obj = [];
-
   selectedUDFs.map((i) => {
     if (responseUdf && responseUdf[i.label] !== undefined) {
       obj.push({
@@ -198,7 +197,11 @@ function getSelctedUdfValues(selectedUDFs, responseUdf) {
         value: responseUdf[i.label],
       });
     } else {
-      obj.push({ ...i });
+      obj.push({
+        fieldType: i.fieldType,
+        key: i.key,
+        label: i.label
+      });
     }
   });
 

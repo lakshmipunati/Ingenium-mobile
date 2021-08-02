@@ -412,8 +412,8 @@ export const Data = (props) => {
                           )}
                         </View>
                       ) : null}
-                      {i.fieldType === 'NUMERIC' ||
-                        i.fieldType === 'CURRENCY' ? (
+                      {i.fieldType == 'NUMERIC' ||
+                        i.fieldType == 'CURRENCY' ? (
                         <SharedTextInput
                           keyboardType='number-pad'
                           label={i.label}

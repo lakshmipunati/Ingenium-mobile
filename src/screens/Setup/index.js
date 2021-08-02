@@ -204,7 +204,7 @@ export const Setup = (props) => {
                                 field.fieldType == 'CURRENCY' ? 15 : 10,
                             }}
                             // style={{ minWidth: width - 90, height: 40 }}
-                            value={field.value ? field.value : ''}
+                            value={field.value ? parseFloat(field.value).toFixed(2) : ''}
                             onChangeText={(name, value) =>
                               onChangeText(name, value, true)
                             }
