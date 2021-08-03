@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -35,7 +36,7 @@ export const Setup = (props) => {
   const { UDFLookupList, selectedUDFs, udfTypes } = reducerData.entity;
 
   const UDFLookupListItems = UDFLookupList.map((item) => {
-    return { key: item.key, label: item.label, fieldType: item.fieldType , maxLength: item.fieldLength};
+    return { key: item.key, label: item.label, fieldType: item.fieldType, maxLength: item.fieldLength };
   });
 
   const deleteUDF = (selectedUDFObj) => {
@@ -69,6 +70,14 @@ export const Setup = (props) => {
   const onChangeText = (name, value, isUdfField = false) => {
     dispatch(selectedTypeUpdate({ title: value, type: name, isUdfField }));
   };
+
+  const onBlur = (value, name, isUdfField = false, fieldType = null) => {
+    let updatedValue;
+    if (fieldType == 'CURRENCY') {
+      updatedValue = parseFloat(value).toFixed(2);
+      dispatch(selectedTypeUpdate({ title: updatedValue, type: name, isUdfField }));
+    }
+  }
 
   const getInitialValue = () => {
     if (UDFLookupListItems && UDFLookupListItems[0]) {
@@ -140,6 +149,9 @@ export const Setup = (props) => {
                               onChangeText={(name, value) =>
                                 onChangeText(name, value, true)
                               }
+                              onBlur={(name, value) =>
+                              onBlur(name, value, true)
+                            }
                             />
                           </View>
                         )
@@ -180,7 +192,7 @@ export const Setup = (props) => {
                     : null} */}
 
                       {field.fieldType == 'CURRENCY' ||
-                      field.fieldType == 'NUMERIC' ? (
+                        field.fieldType == 'NUMERIC' ? (
                         <View
                           style={{
                             flex: 1.2,
@@ -204,9 +216,12 @@ export const Setup = (props) => {
                                 field.fieldType == 'CURRENCY' ? 15 : 10,
                             }}
                             // style={{ minWidth: width - 90, height: 40 }}
-                            value={field.value ? parseFloat(field.value).toFixed(2) : ''}
+                            value={field.value ? field.value : ''}
+                            onBlur={(name, value) =>
+                              onBlur(name, value, true, field.fieldType)
+                            }
                             onChangeText={(name, value) =>
-                              onChangeText(name, value, true)
+                              onChangeText(name, value, true, field.fieldType)
                             }
                           />
                         </View>

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View, Text, Image, TouchableOpacity } from "react-native";
+import { Button, StyleSheet, TextInput, View, Text, Alert, TouchableOpacity } from "react-native";
 import { BarCodeScanner } from "../bar-code-scanner";
 import { lookup, barcodeCamera, anchorIcon, searchLocation } from "../../assets/images";
 import { AnchorIcon, BarcodeIcon, LookupIcon, SearchIcon } from "../../assets";
 
 export function SharedTextInput(props) {
     const [scannerActive, setScannerActive] = useState(true);
-
+   
     return (
         <View style={{ flex: 1 }}>
             {/* {scannerActive ? <BarCodeScanner setScanned={(status) => setScannerActive(status)} scanned={scannerActive} /> : */}
@@ -25,7 +25,8 @@ export function SharedTextInput(props) {
                             style={[styles.sharedInputBox, props.style]}
                             underlineColorAndroid="rgba(0,0,0,0)"
                             multiline
-                            //maxLength={props.maxLength}
+                            maxLength={props.maxLength}
+                            onBlur={(value) => props.onBlur(props.value,props.name) }
                         />
                         {props.isSearch ?
                             <TouchableOpacity style={styles.button} onPress={() => props.onClickSearch(props.name)}>

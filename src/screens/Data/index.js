@@ -192,6 +192,14 @@ export const Data = (props) => {
     dispatch(selectedTypeUpdate({ title: value, type: name, isUdfField }));
   };
 
+  const onBlur = (value, name, isUdfField = false, fieldType = null) => {
+    let updatedValue;
+    if (fieldType == 'CURRENCY') {
+      updatedValue = parseFloat(value).toFixed(2);
+      dispatch(selectedTypeUpdate({ title: updatedValue, type: name, isUdfField }));
+    }
+  }
+
   const onClickScanner = (activeTab, isUdf = false) => {
     setScanned((prev) => ({
       ...prev,
@@ -280,6 +288,9 @@ export const Data = (props) => {
                   onClickScanner={(activeTab) => onClickScanner(activeTab)}
                   onClickLookup={(name) => onClickLookup(name, assetNumber)}
                   onChangeText={(name, value) => onChangeText(name, value)}
+                  onBlur={(name, value) =>
+                              onBlur(name, value)
+                            }
                   isLookup
                   isScanner
                 />
@@ -301,6 +312,9 @@ export const Data = (props) => {
                   onChangeText={(name, value) => onChangeText(name, value)}
                   onClickSearch={(title) => handleOnclickSearch(title)}
                   onClickDefault={(name) => onClickDefault(name)}
+                  onBlur={(name, value) =>
+                              onBlur(name, value)
+                            }
                   isDefault
                   isScanner
                   isSearch
@@ -357,6 +371,9 @@ export const Data = (props) => {
                   editable
                   value={productCategory ? productCategory.toString() : ''}
                   onChangeText={(name, value) => onChangeText(name, value)}
+                  onBlur={(name, value) =>
+                              onBlur(name, value)
+                            }
                 />
               </View>
               {selectedUDFs && selectedUDFs.length == 0 ? (
@@ -405,6 +422,9 @@ export const Data = (props) => {
                               onChangeText={(name, value) =>
                                 onChangeText(name, value, true)
                               }
+                              onBlur={(name, value) =>
+                              onBlur(name, value, true, i.fieldType)
+                            }
                               maxLength={i.maxLength}
                               //style={{ minWidth: width - 79 }}
                               style={{ width: '87%' }}
@@ -422,12 +442,15 @@ export const Data = (props) => {
                           keyboardType='number-pad'
                           label={i.label}
                           name={i.label}
-                          value={i.value ? parseFloat(i.value).toFixed(2) : ''}
+                          value={i.value ? i.value.toString() : ''}
                           style={{ minWidth: width - 36, height: 45 }}
                           //maxLength={i.maxLength}
                           onChangeText={(name, value) =>
                             onChangeText(name, value, true)
                           }
+                          onBlur={(name, value) =>
+                              onBlur(name, value, true, i.fieldType)
+                            }
                         />
                       ) : null}
                       {i.fieldType === 'DATE' ? (
