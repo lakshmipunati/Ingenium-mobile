@@ -420,7 +420,7 @@ export const Data = (props) => {
                           name={i.label}
                           value={i.value ? i.value.toString() : ''}
                           style={{ minWidth: width - 36, height: 45 }}
-                          maxLength={i.maxLength}
+                          //maxLength={i.maxLength}
                           onChangeText={(name, value) =>
                             onChangeText(name, value, true)
                           }
