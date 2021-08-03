@@ -37,6 +37,7 @@ const entity = {
   udfTypes: [],
   permissions: [],
   securityLevel: 'FULL ACCESS',
+  defaultLocation:''
   // securityLevel: "READ ONLY"
 };
 

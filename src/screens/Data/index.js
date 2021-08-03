@@ -54,6 +54,7 @@ export const Data = (props) => {
     selectedUDFs,
     udfTypes,
     securityLevel,
+    defaultLocation,
   } = reducerData.dataTab.entity;
 
   const dispatch = useDispatch();
@@ -79,6 +80,7 @@ export const Data = (props) => {
         AssetNumber: assetNumber,
         Location: location,
         ConditionCode: selectedConditionCode,
+        DefaultLocation:defaultLocation
         // selectedConditionCode,
       };
       for (let i = 0; i < selectedUDFs.length; i++) {
@@ -121,6 +123,7 @@ export const Data = (props) => {
         AssetNumber: assetNumber,
         Location: location,
         ConditionCode: selectedConditionCode,
+        DefaultLocation:defaultLocation,
       };
     }
 
@@ -129,7 +132,6 @@ export const Data = (props) => {
 
   const handleValidateSaveForm = async () => {
     const res = await validateForm();
-
     if (res && res.status && res.obj) {
       dispatch(updateRelocateForm(res.obj)).then(({ payload }) => {
         if (payload && payload.message) {
@@ -404,7 +406,8 @@ export const Data = (props) => {
                                 onChangeText(name, value, true)
                               }
                               maxLength={i.maxLength}
-                              style={{ minWidth: width - 79 }}
+                              //style={{ minWidth: width - 79 }}
+                              style={{ width: '87%' }}
                               onClickScanner={(activeTab) =>
                                 onClickScanner(i.label, true)
                               }

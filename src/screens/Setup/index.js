@@ -134,7 +134,7 @@ export const Setup = (props) => {
                               label={field.label}
                               name={field.label}
                               placeholder=''
-                              style={{ minWidth: width - 90, height: 40 }}
+                              style={{ minWidth: width - 90, minHeight: 40 }}
                               value={field.value ? field.value : ''}
                               maxLength={field.maxLength}
                               onChangeText={(name, value) =>
@@ -188,9 +188,9 @@ export const Setup = (props) => {
                             position: 'relative',
                           }}
                         >
-                          {field.fieldType == 'CURRENCY' ? (
+                          {/* {field.fieldType == 'CURRENCY' ? (
                             <Text style={styles.currencyText}>$</Text>
-                          ) : null}
+                          ) : null} */}
                           <SharedTextInput
                             keyboardType='number-pad'
                             label={field.label}

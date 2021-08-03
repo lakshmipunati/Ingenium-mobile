@@ -33,6 +33,7 @@ const transformAssetNumberLookupResponse = (response) => {
     let assetNumber = response.AssetNumber;
     let descriptionID = response.DescriptionID;
     let location = response.Location;
+    let defaultLocation = response.Location;
     let selectedConditionCode = response.ConditionCode;
     let assetID = response.ID;
     let unitCost = response.UnitCost;
@@ -54,6 +55,7 @@ const transformAssetNumberLookupResponse = (response) => {
         assetID,
         descriptionID,
         location,
+        defaultLocation,
         selectedConditionCode,
         descriptionCatalogData,
         productCategory,
@@ -169,12 +171,17 @@ export const checkLocationData = async (locationName) => {
 }
 
 export const saveMobileformDataAPI = async (payload) => {
+    let isLocationChanged = false;
+    if((payload.Location != "") && (payload.DefaultLocation != payload.Location)){
+        isLocationChanged = true;
+    }
     for (var propName in payload) {
         if (payload[propName] === "null") {
             delete payload[propName];
         }
     }
     let locationValid = await checkLocationData(payload.Location);
+    delete payload.DefaultLocation;
     if (locationValid) {
         return axios({
             method: 'POST',
@@ -189,7 +196,8 @@ export const saveMobileformDataAPI = async (payload) => {
                     isError: false,
                     data,
                     message: data
-                        ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
+                       // ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
+                       ? `Asset ${isLocationChanged ? 'Relocated': 'Updated' 
                         } Successfully`
                         : `Oops! Failed to ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
                         } Form`,
