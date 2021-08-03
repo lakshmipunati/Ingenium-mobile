@@ -403,6 +403,7 @@ export const Data = (props) => {
                               onChangeText={(name, value) =>
                                 onChangeText(name, value, true)
                               }
+                              maxLength={i.maxLength}
                               style={{ minWidth: width - 79 }}
                               onClickScanner={(activeTab) =>
                                 onClickScanner(i.label, true)
@@ -418,7 +419,7 @@ export const Data = (props) => {
                           keyboardType='number-pad'
                           label={i.label}
                           name={i.label}
-                          value={i.value ? i.value.toString() : ''}
+                          value={i.value ? parseFloat(i.value).toFixed(2) : ''}
                           style={{ minWidth: width - 36, height: 45 }}
                           //maxLength={i.maxLength}
                           onChangeText={(name, value) =>
