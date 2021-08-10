@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
 import { useDispatch } from "react-redux";
 import { BackArrowIcon } from "../../assets";
@@ -9,28 +9,41 @@ export function SearchItems(props) {
 
     const [isSearching, setIsSearching] = useState(false);
     const [searchResultList, setSearchResultList] = useState([])
+    const [searchValue, setSearchValueResult] = useState(params.value)
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (params.value != null || params.value != "") {
+            _handleOnchangeText(params.value)
+        }
+    }, [params])
+
     const _handleOnchangeText = (value) => {
-        setIsSearching(true)
+        setIsSearching(true);
+        setSearchValueResult(value)
         setTimeout(() => {
-            if (value.trim() !== "") {
-                dispatch(triggerSearchItem({ type: params.title, text: value, isUdfField: params.isUdfField })).then(({ payload }) => {
-                    if (payload && !params.isUdfField && payload.searchResultList) {
-                        //  console.log("-----search result list------", payload.searchResultList);
-                        let locationFilterList = payload.searchResultList.filter((e) => {
-                            return (e.key.toLowerCase().includes(value.toLowerCase()))
-                        })
-                        setSearchResultList(locationFilterList)
-                        //console.log("----location after filter---", locationFilterList);
-                    }
-                    else if (payload && payload.searchResultList) {
-                        setSearchResultList(payload.searchResultList)
-                    } else {
-                        setSearchResultList([])
-                    }
-                })
+            if (value) {
+                if (value.trim() !== "") {
+                    dispatch(triggerSearchItem({ type: params.title, text: value, isUdfField: params.isUdfField })).then(({ payload }) => {
+                        if (payload && !params.isUdfField && payload.searchResultList) {
+                            let locationFilterList = payload.searchResultList.filter((e) => {
+                                return (e.key.toLowerCase().includes(value.toLowerCase()))
+                            })
+                            setSearchResultList(locationFilterList)
+                        } else if (params.isUdfField && params.udfList) {
+                            let udfFilterList = params.udfList.filter((e) => {
+                                return (e.label.toLowerCase().includes(value.toLowerCase()))
+                            })
+                            setSearchResultList(udfFilterList)
+                        }
+                        else if (payload && payload.searchResultList) {
+                            setSearchResultList(payload.searchResultList)
+                        } else {
+                            setSearchResultList([])
+                        }
+                    })
+                }
             } else {
                 setSearchResultList([])
             }
@@ -50,9 +63,14 @@ export function SearchItems(props) {
         </TouchableOpacity>
     );
 
-    const renderItem = ({ item }) => (
-        <Item title={item.key} />
-    );
+    const renderItem = ({ item }) => {
+        if (params.isUdfField) {
+          return (<Item title={item.label} />)
+        } else {
+           return (<Item title={item.key} />)
+        }
+
+    };
 
     return (
         <View style={styles.container}>
@@ -70,6 +88,7 @@ export function SearchItems(props) {
                 <View>
                     <TextInput
                         style={styles.searchBox}
+                        value={searchValue}
                         onChangeText={(value) => _handleOnchangeText(value)}
                         placeholder={`Search ${params.title}`}
                     />
@@ -120,7 +139,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         borderBottomColor: 'black',
         borderBottomWidth: 1,
-        fontSize: 16
+        fontSize: 16,
+        textTransform:'uppercase'
     },
     searchLabel: {
         paddingLeft: 20,

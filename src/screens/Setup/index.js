@@ -36,7 +36,7 @@ export const Setup = (props) => {
   const { UDFLookupList, selectedUDFs, udfTypes } = reducerData.entity;
 
   const UDFLookupListItems = UDFLookupList.map((item) => {
-    return { key: item.key, label: item.label, fieldType: item.fieldType, maxLength: item.fieldLength };
+    return { key: item.key, label: item.label, fieldType: item.fieldType, maxLength: item.fieldLength, verifyData: item.verifyData };
   });
 
   const deleteUDF = (selectedUDFObj) => {
@@ -150,8 +150,8 @@ export const Setup = (props) => {
                                 onChangeText(name, value, true)
                               }
                               onBlur={(name, value) =>
-                              onBlur(name, value, true)
-                            }
+                                onBlur(name, value, true)
+                              }
                             />
                           </View>
                         )

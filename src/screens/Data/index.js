@@ -56,7 +56,7 @@ export const Data = (props) => {
     securityLevel,
     defaultLocation,
   } = reducerData.dataTab.entity;
-
+ 
   const dispatch = useDispatch();
   const listitems =
     conditionCodeList && conditionCodeList.length > 0
@@ -80,7 +80,7 @@ export const Data = (props) => {
         AssetNumber: assetNumber,
         Location: location,
         ConditionCode: selectedConditionCode,
-        DefaultLocation:defaultLocation
+        DefaultLocation: defaultLocation
         // selectedConditionCode,
       };
       for (let i = 0; i < selectedUDFs.length; i++) {
@@ -110,7 +110,7 @@ export const Data = (props) => {
           if (res === false) {
             obj = {
               ...obj,
-            [selectedUDFs[i].label]: "null"
+              [selectedUDFs[i].label]: "null"
             }
             status = true;
             //return status;
@@ -123,7 +123,7 @@ export const Data = (props) => {
         AssetNumber: assetNumber,
         Location: location,
         ConditionCode: selectedConditionCode,
-        DefaultLocation:defaultLocation,
+        DefaultLocation: defaultLocation,
       };
     }
 
@@ -228,11 +228,11 @@ export const Data = (props) => {
     }
   };
 
-  const handleOnclickSearch = (title, isUdfField = false) => {
+  const handleOnclickSearch = (title, value = null, udfList, isUdfField = false) => {
     props.navigation.navigate({
       name: 'SearchItems',
       title,
-      params: { title, isUdfField },
+      params: { title, isUdfField, value, udfList },
     });
   };
 
@@ -289,8 +289,8 @@ export const Data = (props) => {
                   onClickLookup={(name) => onClickLookup(name, assetNumber)}
                   onChangeText={(name, value) => onChangeText(name, value)}
                   onBlur={(name, value) =>
-                              onBlur(name, value)
-                            }
+                    onBlur(name, value)
+                  }
                   isLookup
                   isScanner
                 />
@@ -310,11 +310,11 @@ export const Data = (props) => {
                   value={location ? location.toString() : ''}
                   onClickScanner={(activeTab) => onClickScanner(activeTab)}
                   onChangeText={(name, value) => onChangeText(name, value)}
-                  onClickSearch={(title) => handleOnclickSearch(title)}
+                  onClickSearch={(title) => handleOnclickSearch(title, location, null)}
                   onClickDefault={(name) => onClickDefault(name)}
                   onBlur={(name, value) =>
-                              onBlur(name, value)
-                            }
+                    onBlur(name, value)
+                  }
                   isDefault
                   isScanner
                   isSearch
@@ -372,8 +372,8 @@ export const Data = (props) => {
                   value={productCategory ? productCategory.toString() : ''}
                   onChangeText={(name, value) => onChangeText(name, value)}
                   onBlur={(name, value) =>
-                              onBlur(name, value)
-                            }
+                    onBlur(name, value)
+                  }
                 />
               </View>
               {selectedUDFs && selectedUDFs.length == 0 ? (
@@ -386,7 +386,7 @@ export const Data = (props) => {
                   <Text style={styles.udfTitle}>User Defined Fields</Text>
                   {selectedUDFs.map((i, k) => (
                     <View key={k} style={styles.inputContainer}>
-                      {i.fieldType === 'TEXT' ? (
+                      {i.fieldType === 'TEXT' && i.verifyData == true ? (
                         <View style={styles.inputContainer}>
                           {udfTypes[i.label] && udfTypes[i.label].length > 0 ? (
                             <View>
@@ -423,8 +423,8 @@ export const Data = (props) => {
                                 onChangeText(name, value, true)
                               }
                               onBlur={(name, value) =>
-                              onBlur(name, value, true, i.fieldType)
-                            }
+                                onBlur(name, value, true, i.fieldType)
+                              }
                               maxLength={i.maxLength}
                               //style={{ minWidth: width - 79 }}
                               style={{ width: '87%' }}
@@ -435,7 +435,30 @@ export const Data = (props) => {
                             />
                           )}
                         </View>
-                      ) : null}
+                      ) : <SharedTextInput
+                        keyboardType='ascii-capable'
+                        label={i.label}
+                        name={i.label}
+                        value={i.value ? i.value.toString() : ''}
+                        onChangeText={(name, value) =>
+                          onChangeText(name, value, true)
+                        }
+                        onBlur={(name, value) =>
+                          onBlur(name, value, true, i.fieldType)
+                        }
+                        maxLength={i.maxLength}
+                        //style={{ minWidth: width - 79 }}
+                        style={{ minWidth: width - 120 }}
+                        onClickScanner={(activeTab) =>
+                          onClickScanner(i.label, true)
+                        }
+                        onClickSearch={(title) => handleOnclickSearch(title, i.value, udfTypes[i.label], true)}
+                        isScanner
+                        isSearch
+                      />}
+
+
+
                       {i.fieldType == 'NUMERIC' ||
                         i.fieldType == 'CURRENCY' ? (
                         <SharedTextInput
@@ -449,8 +472,8 @@ export const Data = (props) => {
                             onChangeText(name, value, true)
                           }
                           onBlur={(name, value) =>
-                              onBlur(name, value, true, i.fieldType)
-                            }
+                            onBlur(name, value, true, i.fieldType)
+                          }
                         />
                       ) : null}
                       {i.fieldType === 'DATE' ? (

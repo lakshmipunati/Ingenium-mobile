@@ -6,7 +6,7 @@ import {
 import { headers } from "./token.service";
 
 //
-export const getUDFListApi = async() => {
+export const getUDFListApi = async () => {
     //debugger
     return axios({
         method: "GET",
@@ -26,7 +26,7 @@ export const getUDFListApi = async() => {
             let transformedData = transformUDFList(data);
             return transformedData;
         })
-        .catch(({response}) =>response);
+        .catch(({ response }) => response);
 };
 
 const transformUDFList = (UDFList) => {
@@ -35,7 +35,7 @@ const transformUDFList = (UDFList) => {
         label: item.userDefinedField,
         id: item.id,
         defaultData: item.defaultData,
-        // value: item.fieldData,
+        verifyData: item.verifyData,
         fieldType: item.fieldType,
         fieldLength: item.fieldLength,
         data: null,
