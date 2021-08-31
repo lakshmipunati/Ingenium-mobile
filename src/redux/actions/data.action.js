@@ -17,6 +17,7 @@ import {
   getUserPermissionApi,
 } from '../services';
 
+
 export const lookupByAssetNumberAction = createAsyncThunk(
   'data/lookup/asset-number',
   async (assetNumber, { getState, dispatch }) => {
