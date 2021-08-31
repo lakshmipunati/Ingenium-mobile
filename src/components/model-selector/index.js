@@ -14,7 +14,8 @@ export function ModelSelector(props) {
                     data={props.listItems}
                     accessible={true}
                     // selectTextStyle={props.selectTextStyle ? {fontSize: 10} : {fontSize: 10}}
-                    initValueTextStyle={props.selectTextStyle ? props.selectTextStyle : {color: 'black'}}
+                    initValueTextStyle={{color:props.isConditionCodeEnable ? 'red' : 'black'}}
+                   // initValueTextStyle={props.selectTextStyle ? props.selectTextStyle : {color: 'black'}}
                     initValue={props.initValue ? props.initValue : ""}
                     onChange={(option) => { props.onChange(option) }}
                     cancelText="Cancel"

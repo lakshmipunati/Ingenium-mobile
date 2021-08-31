@@ -199,8 +199,8 @@ export const saveMobileformDataAPI = async (payload) => {
                        // ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
                        ? `Asset ${isLocationChanged ? 'Relocated': 'Updated' 
                         } Successfully`
-                        : `Oops! Failed to ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
-                        } Form`,
+                        : `Asset ${payload.Location.trim() !== '' ? 'Update' : 'Relocate'
+                        } Failed, Something went wrong`,
                 };
             })
             .catch(({ response }) => {

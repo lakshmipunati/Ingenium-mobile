@@ -10,6 +10,7 @@ import {
   removeSelectedUDFAction,
   udfFieldLookup,
   clearAllUDFSelected,
+  updateRelocateForm,
 } from '../actions';
 const entity = {
   unitCost: '',
@@ -225,6 +226,14 @@ export const dataTab = createSlice({
 
     [clearAllUDFSelected.fulfilled]: (state, { payload }) => {
       state.entity.selectedUDFs = [];
+    },
+
+    [updateRelocateForm.pending]:(state, { payload }) => {
+      state.loading = true;
+    },
+
+    [updateRelocateForm.fulfilled]:(state, { payload }) => {
+      state.loading = false;
     },
   },
 }).reducer;

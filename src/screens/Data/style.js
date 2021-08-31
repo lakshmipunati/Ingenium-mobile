@@ -61,5 +61,40 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         textAlign: "center"
-    }
+    },
+
+
+    centeredView: {
+        flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:21
+      },
+      modalView: {
+        backgroundColor: 'white',
+        borderRadius: 5,
+        padding: 10,
+        width: '90%',
+        height: 100,
+        paddingTop: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+      },
+  
+      textStyle: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 16
+      },
+      modalText: {
+        marginTop: 25,
+        textAlign: 'center',
+        alignItems: 'center',
+      },
 })

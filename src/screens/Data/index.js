@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  Alert,
+  Alert, Modal
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -14,7 +14,6 @@ import {
   PageLoader,
   RadioBtn,
   SharedDateTimePicker,
-  ExpoModal,
 } from '../../components';
 import { BarCodeScanner } from '../../components/bar-code-scanner';
 import { SharedTextInput } from '../../components/text-input';
@@ -40,7 +39,6 @@ export const Data = (props) => {
     status: false,
     isUdf: false,
   });
-
   const reducerData = useSelector((state) => state);
 
   const {
@@ -56,7 +54,7 @@ export const Data = (props) => {
     securityLevel,
     defaultLocation,
   } = reducerData.dataTab.entity;
- 
+
   const dispatch = useDispatch();
   const listitems =
     conditionCodeList && conditionCodeList.length > 0
@@ -135,10 +133,15 @@ export const Data = (props) => {
     if (res && res.status && res.obj) {
       dispatch(updateRelocateForm(res.obj)).then(({ payload }) => {
         if (payload && payload.message) {
+          setTitleText(payload.message);
           if (payload.data && payload.data === true) {
             dispatch(clearDataFields());
           }
-          AsyncAlert('', payload.message);
+          setModalVisible(true);
+          setTimeout(() => {
+            setModalVisible(false);
+          }, 2000);
+          // AsyncAlert('', payload.message);
         }
       });
     }
@@ -250,7 +253,8 @@ export const Data = (props) => {
   const handleSetSecurityLevel = (status) => {
     dispatch(clearDataFields());
   };
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [titleText, setTitleText] = useState('');
   //   console.log('==securityLevel===', securityLevel);
   return (
     <PageLoader loading={reducerData.dataTab.loading}>
@@ -567,11 +571,28 @@ export const Data = (props) => {
               </View>
             </View>
           </ScrollView>
-          <ExpoModal
-            modalVisible={securityLevel === 'NO ACCESS' ? true : false}
-            hideModalBox={() => handleSetSecurityLevel('FULL ACCESS')}
-            message="You don't have the permissions!"
-          />
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onBackdropPress={() => {
+                setModalVisible(false);
+              }}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                <View style={styles.modalText}>
+                  <Text style={styles.textStyle} >{titleText}</Text>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+          </View>
         </View>
       )}
     </PageLoader>
