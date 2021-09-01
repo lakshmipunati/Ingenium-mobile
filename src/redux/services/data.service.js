@@ -6,7 +6,7 @@ import {
     ASSETS_UPDATE_RELOCATE,
     CONDITION_CODE,
     SEARCH_LOCATION,
-    UDF_SUGGESTION,
+    UDF_SUGGESTION,VERIFY_UDF
 } from '../../config';
 import { getUserPermissionApi } from './login.service';
 import { headers } from './token.service';
@@ -172,7 +172,7 @@ export const checkLocationData = async (locationName) => {
 
 export const saveMobileformDataAPI = async (payload) => {
     let isLocationChanged = false;
-    if((payload.Location != "") && (payload.DefaultLocation != payload.Location)){
+    if ((payload.Location != "") && (payload.DefaultLocation != payload.Location)) {
         isLocationChanged = true;
     }
     for (var propName in payload) {
@@ -196,8 +196,8 @@ export const saveMobileformDataAPI = async (payload) => {
                     isError: false,
                     data,
                     message: data
-                       // ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
-                       ? `Asset ${isLocationChanged ? 'Relocated': 'Updated' 
+                        // ? `Asset ${payload.Location.trim() !== '' ? 'Updated' : 'Relocated'
+                        ? `Asset ${isLocationChanged ? 'Relocated' : 'Updated'
                         } Successfully`
                         : `Asset ${payload.Location.trim() !== '' ? 'Update' : 'Relocate'
                         } Failed, Something went wrong`,
@@ -214,3 +214,25 @@ export const saveMobileformDataAPI = async (payload) => {
         return
     }
 };
+
+export const verifyUdfData = async (payload) => {
+    // /{userDefinedField}/{fieldData}
+    // console.log("verify data ------", payload);
+    // let datatest = API_BASE_PATH + VERIFY_UDF + payload.name + "/" + payload.number
+    // console.log("url ------", datatest);
+    return axios({
+        method: 'GET',
+        url: VERIFY_UDF + payload.name + "/" + payload.number,
+        baseURL: API_BASE_PATH,
+        headers: await headers(),
+    })
+        .then((response) => {
+            let { data } = response;
+           // console.log("verifyUdfData*******", data)
+            return data;
+        })
+        .catch((response) => {
+            response
+        });
+};
+

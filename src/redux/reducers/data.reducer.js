@@ -38,7 +38,7 @@ const entity = {
   udfTypes: [],
   permissions: [],
   securityLevel: 'FULL ACCESS',
-  defaultLocation:''
+  defaultLocation: ''
   // securityLevel: "READ ONLY"
 };
 
@@ -135,6 +135,7 @@ export const dataTab = createSlice({
           key: i.key,
           label: i.label,
           fieldType: i.fieldType,
+          verifyData: i.verifyData,
         })),
         permissions: state.entity.permissions.map((i) => i),
       };
@@ -168,19 +169,19 @@ export const dataTab = createSlice({
         state.entity.selectedUDFs && state.entity.selectedUDFs.length > 0
           ? state.entity.selectedUDFs
           : payload.selectedUDFs
-          ? payload.selectedUDFs
-          : [];
+            ? payload.selectedUDFs
+            : [];
       state.entity.UDFLookupList = payload.userDefinedFields
         ? payload.userDefinedFields
         : [];
-       
-        state.entity.selectedUDFs.filter((e) => {
-          if(e.fieldType == 'CURRENCY' && e.value) {
-            e.value = parseFloat(e.value).toFixed(2);
-          }
-        })
 
-       // console.log("-----state.entity.selectedUDFs---",state.entity.selectedUDFs)
+      state.entity.selectedUDFs.filter((e) => {
+        if (e.fieldType == 'CURRENCY' && e.value) {
+          e.value = parseFloat(e.value).toFixed(2);
+        }
+      })
+
+      // console.log("-----state.entity.selectedUDFs---",state.entity.selectedUDFs)
       state.entity.udfTypes = payload.udfTypes;
       state.entity.conditionCodeList = payload.conditionCode;
       state.entity.permissions = payload.permissions;
@@ -228,11 +229,11 @@ export const dataTab = createSlice({
       state.entity.selectedUDFs = [];
     },
 
-    [updateRelocateForm.pending]:(state, { payload }) => {
+    [updateRelocateForm.pending]: (state, { payload }) => {
       state.loading = true;
     },
 
-    [updateRelocateForm.fulfilled]:(state, { payload }) => {
+    [updateRelocateForm.fulfilled]: (state, { payload }) => {
       state.loading = false;
     },
   },

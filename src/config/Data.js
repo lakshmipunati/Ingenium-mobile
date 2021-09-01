@@ -21,3 +21,5 @@ export const LOCATION_VALIDATION = "Location Cannot be empty!";
 export const ASSET_NOT_FOUND = "Asset not found";
 
 export const UDF_CONFIRMATION = " is empty. Do you wish to update as empty?";
+
+export const VERIFY_UDF = '/UDFData/Validate/'

@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         borderColor: '#B5B3B2',
         fontSize: 16,
         //width: '80%',
-        textTransform:'uppercase'
+       // textTransform:'uppercase'
     },
     container: {
         flexDirection: 'row'

@@ -66,7 +66,7 @@ export const Data = (props) => {
       : [];
 
   // selectedConditionCode
-
+  
   const validateForm = async () => {
     var status = false;
     var obj = {};
@@ -191,7 +191,10 @@ export const Data = (props) => {
     // dispatch(getUDFDataAction());
   }, [0]);
 
-  const onChangeText = (name, value, isUdfField = false) => {
+  const onChangeText = (name, value, isUdfField = false, fieldType = null) => {
+    if (fieldType == 'TEXT') {
+      value = value.toUpperCase();
+    }
     dispatch(selectedTypeUpdate({ title: value, type: name, isUdfField }));
   };
 
@@ -203,28 +206,29 @@ export const Data = (props) => {
     }
   }
 
-  const onClickScanner = (activeTab, isUdf = false) => {
+  const onClickScanner = (activeTab, isUdf = false, isVerifyData = false) => {
     setScanned((prev) => ({
       ...prev,
       status: true,
       activeTab,
       isUdf,
+      isVerifyData,
     }));
   };
 
-  const handleAferScann = (status, data, activeTab, isUdf) => {
+  const handleAferScann = (status, data, activeTab, isUdf, isVerifyData) => {
     if (isUdf) {
-      onClickLookup(activeTab, data, isUdf);
+      onClickLookup(activeTab, data, isUdf, isVerifyData);
     } else {
       dispatch(selectedTypeUpdate({ title: data, type: activeTab, isUdf }));
     }
-    setScanned({ status, activeTab: '', isUdf: false });
+    setScanned({ status, activeTab: '', isUdf: false, isVerifyData: false });
   };
 
-  const onClickLookup = (name, number, isUdf = false) => {
+  const onClickLookup = (name, number, isUdf = false, isVerifyData = false) => {
     if (number && number.trim() !== '') {
       if (isUdf) {
-        dispatch(udfFieldLookup({ name, number }));
+        dispatch(udfFieldLookup({ name, number, isVerifyData }));
       } else {
         dispatch(lookupByAssetNumberAction(number));
       }
@@ -260,11 +264,12 @@ export const Data = (props) => {
     <PageLoader loading={reducerData.dataTab.loading}>
       {scanned.status && scanned.activeTab.trim() !== '' ? (
         <BarCodeScanner
-          setScanned={(status, data, activeTab, isUdf) =>
-            handleAferScann(status, data, activeTab, isUdf)
+          setScanned={(status, data, activeTab, isUdf, isVerifyData) =>
+            handleAferScann(status, data, activeTab, isUdf, isVerifyData)
           }
           activeTab={scanned.activeTab}
           isUdf={scanned.isUdf}
+          isVerifyData={scanned.isVerifyData}
         />
       ) : (
         <View
@@ -405,7 +410,7 @@ export const Data = (props) => {
                                 />
                                 <TouchableOpacity
                                   style={styles.button}
-                                  onPress={() => onClickScanner(i.label, true)}
+                                  onPress={() => onClickScanner(i.label, true, i.verifyData)}
                                 >
                                   <View style={styles.iconStyle}>
                                     <BarcodeIcon
@@ -424,7 +429,7 @@ export const Data = (props) => {
                               name={i.label}
                               value={i.value ? i.value.toString() : ''}
                               onChangeText={(name, value) =>
-                                onChangeText(name, value, true)
+                                onChangeText(name, value, true, i.fieldType)
                               }
                               onBlur={(name, value) =>
                                 onBlur(name, value, true, i.fieldType)
@@ -433,35 +438,48 @@ export const Data = (props) => {
                               //style={{ minWidth: width - 79 }}
                               style={{ width: '87%' }}
                               onClickScanner={(activeTab) =>
-                                onClickScanner(i.label, true)
+                                onClickScanner(i.label, true, i.verifyData)
                               }
                               isScanner
                             />
                           )}
                         </View>
-                      ) : <SharedTextInput
-                        keyboardType='ascii-capable'
-                        label={i.label}
-                        name={i.label}
-                        value={i.value ? i.value.toString() : ''}
-                        onChangeText={(name, value) =>
-                          onChangeText(name, value, true)
-                        }
-                        onBlur={(name, value) =>
-                          onBlur(name, value, true, i.fieldType)
-                        }
-                        maxLength={i.maxLength}
-                        //style={{ minWidth: width - 79 }}
-                        style={{ minWidth: width - 120 }}
-                        onClickScanner={(activeTab) =>
-                          onClickScanner(i.label, true)
-                        }
-                        onClickSearch={(title) => handleOnclickSearch(title, i.value, udfTypes[i.label], true)}
-                        isScanner
-                        isSearch
-                      />}
+                      )
+                        : null
+                      }
 
-
+                      {i.fieldType === 'TEXT' && i.verifyData == false ? (
+                        <View style={styles.inputContainer}>
+                          <View>
+                            {/* <Text style={styles.label}>{i.label}</Text> */}
+                            <View style={{ flexDirection: 'row' }}>
+                              <SharedTextInput
+                                keyboardType='ascii-capable'
+                                label={i.label}
+                                name={i.label}
+                                value={i.value ? i.value.toString() : ''}
+                                onChangeText={(name, value) =>
+                                  onChangeText(name, value, true, i.fieldType)
+                                }
+                                onBlur={(name, value) =>
+                                  onBlur(name, value, true, i.fieldType)
+                                }
+                                maxLength={i.maxLength}
+                                //style={{ minWidth: width - 79 }}
+                                style={{ minWidth: width - 120 }}
+                                onClickScanner={(activeTab) =>
+                                  onClickScanner(i.label, true, i.verifyData)
+                                }
+                                onClickSearch={(title) => handleOnclickSearch(title, i.value, udfTypes[i.label], true)}
+                                isScanner
+                                isSearch
+                              />
+                            </View>
+                          </View>
+                        </View>
+                      )
+                        : null
+                      }
 
                       {i.fieldType == 'NUMERIC' ||
                         i.fieldType == 'CURRENCY' ? (
@@ -473,7 +491,7 @@ export const Data = (props) => {
                           style={{ minWidth: width - 36, height: 45 }}
                           //maxLength={i.maxLength}
                           onChangeText={(name, value) =>
-                            onChangeText(name, value, true)
+                            onChangeText(name, value, true, i.fieldType)
                           }
                           onBlur={(name, value) =>
                             onBlur(name, value, true, i.fieldType)
@@ -486,7 +504,7 @@ export const Data = (props) => {
                           name={i.label}
                           value={i.value ? i.value : ''}
                           handleChangeDate={(name, value) =>
-                            onChangeText(name, value, true)
+                            onChangeText(name, value, true, i.fieldType)
                           }
                         />
                       ) : null}
@@ -508,7 +526,7 @@ export const Data = (props) => {
                                 value={true}
                                 name={i.label}
                                 handleClickRadio={(name, value) =>
-                                  onChangeText(name, value, true)
+                                  onChangeText(name, value, true, i.fieldType)
                                 }
                               />
                             </View>
@@ -525,7 +543,7 @@ export const Data = (props) => {
                                 value={false}
                                 name={i.label}
                                 handleClickRadio={(name, value) =>
-                                  onChangeText(name, value, true)
+                                  onChangeText(name, value, true, i.fieldType)
                                 }
                               />
                             </View>
@@ -586,8 +604,8 @@ export const Data = (props) => {
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                <View style={styles.modalText}>
-                  <Text style={styles.textStyle} >{titleText}</Text>
+                  <View style={styles.modalText}>
+                    <Text style={styles.textStyle} >{titleText}</Text>
                   </View>
                 </View>
               </View>

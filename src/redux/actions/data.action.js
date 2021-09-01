@@ -15,6 +15,7 @@ import {
   saveMobileformDataAPI,
   retrieveTokenFromStorage,
   getUserPermissionApi,
+  verifyUdfData
 } from '../services';
 
 
@@ -41,6 +42,7 @@ export const lookupByAssetNumberAction = createAsyncThunk(
         ...response,
         selectedUDFs: getSelctedUdfValues(selectedUDFs, response),
       };
+      console.log("obj===", obj)
       return obj;
     }
     return {
@@ -52,25 +54,38 @@ export const lookupByAssetNumberAction = createAsyncThunk(
 export const udfFieldLookup = createAsyncThunk(
   'scanner/udffield',
   async (obj, { getState }) => {
-    const { name, number } = obj;
+    //console.log("---------udfFieldLookup------", obj)
+    const { name, number, isVerifyData } = obj;
     const { selectedUDFs } = getState().dataTab.entity;
-    const response = await assetNumberLookupAPI(number);
-
-    if (response && response.data) {
-      showAlert(response.data);
-    } else if (!response[name]) {
-      showAlert(`${name} not found!`);
+    // const response = await assetNumberLookupAPI(number);
+    console.log("---------udfFieldLookup   selectedUDFs------", selectedUDFs);
+    if (isVerifyData) {
+      const response = await verifyUdfData(obj)
+      console.log("---------response------", response)
+      if (response) {
+        //showAlert(response.data);
+      } else {
+        showAlert(`${name} not found!`);
+        number = ""
+        //return;
+      }
     }
+    // if (response && response.data) {
+    //   showAlert(response.data);
+    // } else if (!response[name]) {
+    //   showAlert(`${name} not found!`);
+    // }
     const selectedudfList = [];
     selectedudfList.push(...selectedUDFs);
-    if (response && response[name] && selectedUDFs && selectedUDFs.length > 0) {
+    if (name && selectedUDFs && selectedUDFs.length > 0) {
       const selectedUdfIndex = selectedUDFs.findIndex((i) => i.label === name);
       if (selectedUdfIndex > -1) {
         selectedudfList[selectedUdfIndex] = {
           ...selectedudfList[selectedUdfIndex],
-          value: response[name],
+          value: number,
         };
       }
+      console.log(selectedudfList);
       return selectedudfList;
     }
     return selectedUDFs;
@@ -89,6 +104,7 @@ export const getUDFDataAction = createAsyncThunk(
       const { payload } = await dispatch(
         getSelectedUDFFieldData(userDefinedFields[i].label),
       );
+      console.log("-----getUDFDataAction-----", response)
       udfTypes = {
         ...udfTypes,
         [userDefinedFields[i].label]: payload.map((item, index) => ({
@@ -198,10 +214,13 @@ function getSelctedUdfValues(selectedUDFs, responseUdf) {
         value: responseUdf[i.label],
       });
     } else {
+      console.log("---getSelctedUdfValues----", responseUdf)
       obj.push({
         fieldType: i.fieldType,
         key: i.key,
-        label: i.label
+        label: i.label,
+        verifyData: i.verifyData,
+        fieldLength: i.fieldLength,
       });
     }
   });
