@@ -25,7 +25,7 @@ export const lookupByAssetNumberAction = createAsyncThunk(
     const { selectedUDFs } = getState().dataTab.entity;
     const response = await assetNumberLookupAPI(assetNumber);
     //getConditionCodeApi(response.DataCategory);
-    console.log('===conditionCodeList===', response);
+    //console.log('===conditionCodeList===', response);
     dispatch(getUDFDataAction(response.DataCategory))
     if (response && response.data) {
       showAlert(response.data);
@@ -42,7 +42,6 @@ export const lookupByAssetNumberAction = createAsyncThunk(
         ...response,
         selectedUDFs: getSelctedUdfValues(selectedUDFs, response),
       };
-      console.log("obj===", obj)
       return obj;
     }
     return {
@@ -54,20 +53,16 @@ export const lookupByAssetNumberAction = createAsyncThunk(
 export const udfFieldLookup = createAsyncThunk(
   'scanner/udffield',
   async (obj, { getState }) => {
-    //console.log("---------udfFieldLookup------", obj)
     const { name, number, isVerifyData } = obj;
     const { selectedUDFs } = getState().dataTab.entity;
     // const response = await assetNumberLookupAPI(number);
-    console.log("---------udfFieldLookup   selectedUDFs------", selectedUDFs);
     if (isVerifyData) {
       const response = await verifyUdfData(obj)
-      console.log("---------response------", response)
       if (response) {
         //showAlert(response.data);
       } else {
         showAlert(`${name} not found!`);
         number = ""
-        //return;
       }
     }
     // if (response && response.data) {
@@ -85,7 +80,6 @@ export const udfFieldLookup = createAsyncThunk(
           value: number,
         };
       }
-      console.log(selectedudfList);
       return selectedudfList;
     }
     return selectedUDFs;
@@ -104,7 +98,6 @@ export const getUDFDataAction = createAsyncThunk(
       const { payload } = await dispatch(
         getSelectedUDFFieldData(userDefinedFields[i].label),
       );
-      console.log("-----getUDFDataAction-----", response)
       udfTypes = {
         ...udfTypes,
         [userDefinedFields[i].label]: payload.map((item, index) => ({
@@ -214,7 +207,6 @@ function getSelctedUdfValues(selectedUDFs, responseUdf) {
         value: responseUdf[i.label],
       });
     } else {
-      console.log("---getSelctedUdfValues----", responseUdf)
       obj.push({
         fieldType: i.fieldType,
         key: i.key,
@@ -250,15 +242,4 @@ export const getCompanyStoragePath = createAsyncThunk(
   },
 );
 
-// export const validateMobileformData = (assetData) => {
-//   let errorMessages = [];
 
-//   if (!assetData.AssetNumber) {
-//     errorMessages.push('Asset number cannot be empty');
-//   }
-
-//   if (!assetData.Location) {
-//     errorMessages.push('Location Cannot be empty');
-//   }
-//   return errorMessages;
-// };

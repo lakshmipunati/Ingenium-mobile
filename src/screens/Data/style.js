@@ -63,14 +63,13 @@ export const styles = StyleSheet.create({
         textAlign: "center"
     },
 
-
     centeredView: {
         flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop:21
-      },
-      modalView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 21
+    },
+    modalView: {
         backgroundColor: 'white',
         borderRadius: 5,
         padding: 10,
@@ -79,22 +78,22 @@ export const styles = StyleSheet.create({
         paddingTop: 10,
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-      },
-  
-      textStyle: {
+    },
+
+    textStyle: {
         color: 'black',
         fontWeight: 'bold',
         fontSize: 16
-      },
-      modalText: {
+    },
+    modalText: {
         marginTop: 25,
         textAlign: 'center',
         alignItems: 'center',
-      },
+    },
 })
